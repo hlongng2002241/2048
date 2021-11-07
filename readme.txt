@@ -24,6 +24,9 @@ class Evaluation:
             128 64  32  16
         + đếm số ô trống
         + đếm số cặp ghép dc, ghép điểm càng to thì càng nhiều điểm
+        
+class Score:
+    
 
 abstract class Algorithm:
     method best_move() => tính toán và quyết định nước đi
