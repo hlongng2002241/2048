@@ -15,6 +15,14 @@
 
 class Evaluation:
     # đánh giá theo các tiêu chí
+        + điểm trên số ô
+        + đánh thứ tự các ô
+            0   0   0   0
+            0   0   0   0
+            0   2   4   8
+            128 64  32  16
+        + đếm số ô trống
+        + đếm số cặp ghép dc
 
 abstract class Algorithm:
     method best_move() => tính toán và quyết định nước đi
