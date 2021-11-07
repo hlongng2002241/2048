@@ -25,11 +25,11 @@ class Evaluation:
         + đếm số ô trống
         + đếm số cặp ghép dc, ghép điểm càng to thì càng nhiều điểm
         (+ special case(case khoai, khó xử lý:
-        0    0  0   0
-        0.   0  0   0
+        0   0   0   0
+        0   0   0   0
         2   4   8   16
         256 128 64  32
-        
+        (trừ điểm... trừ bao nhiêu điểm?)
 class Score:
     
 
