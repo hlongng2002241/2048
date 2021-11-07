@@ -11,3 +11,16 @@
     + for constant variable:    use upper snake case: SNAKE_CASE
     + for function:             same as normal variable
     + for class:                use capital camel case: CapitalCamelCase
+    
+
+class Evaluation:
+    # đánh giá theo các tiêu chí
+
+abstract class Algorithm:
+    method best_move() => tính toán và quyết định nước đi
+
+class Minimax(Algorithm):
+    ...
+
+class ...(Algorithm):
+    ...
