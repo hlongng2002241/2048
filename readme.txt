@@ -12,6 +12,7 @@
     + for function:             same as normal variable
     + for class:                use capital camel case: CapitalCamelCase
     
+tỉ lệ random ra 4 là 10%
 
 class Evaluation:
     # đánh giá theo các tiêu chí
