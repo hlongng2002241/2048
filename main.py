@@ -52,7 +52,7 @@ class Application:
             end_time        = pygame_time.get_ticks()
             dt              = end_time - start_time
             start_time      = end_time
-            current_time    += dt / 1000
+            current_time   += dt / 1000
 
             self.show_fps(dt)
             
