@@ -122,8 +122,8 @@ class Grid:
         text_surface    = self.font.render(str(tile_value), True, color)
         w, h            = text_surface.get_width(), text_surface.get_height()
         cell_size       = self.settings.TILE_SIZE
-        x               += (cell_size - w) / 2
-        y               += (cell_size - h) / 2
+        x              += (cell_size - w) / 2
+        y              += (cell_size - h) / 2
         self.bg.blit(text_surface, (x, y, w, h))
 
     def redraw(self):
@@ -183,15 +183,15 @@ class Grid:
                     continue
                     
                 if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]            *= 2
+                    self.board[r][k]           *= 2
                     self.board[r][c]            = 0
                     used[k]                     = 1
                     is_merged                   = True
-                else:
-                    if k + 1 != c:
-                        self.board[r][k + 1]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+
+                elif k + 1 != c:
+                    self.board[r][k + 1]        = self.board[r][c]
+                    self.board[r][c]            = 0
+                    is_merged                   = True
 
         return is_merged
 
@@ -218,15 +218,15 @@ class Grid:
                     continue
                     
                 if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]            *= 2
+                    self.board[r][k]           *= 2
                     self.board[r][c]            = 0
                     used[k]                     = 1
                     is_merged                   = True
-                else:
-                    if k - 1 != c:
-                        self.board[r][k - 1]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+
+                elif k - 1 != c:
+                    self.board[r][k - 1]        = self.board[r][c]
+                    self.board[r][c]            = 0
+                    is_merged                   = True
 
         return is_merged
 
@@ -253,15 +253,15 @@ class Grid:
                     continue
                     
                 if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]            *= 2
+                    self.board[k][c]           *= 2
                     self.board[r][c]            = 0
                     used[k]                     = 1
                     is_merged                   = True
-                else:
-                    if k + 1 != r:
-                        self.board[k + 1][c]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+
+                elif k + 1 != r:
+                    self.board[k + 1][c]        = self.board[r][c]
+                    self.board[r][c]            = 0
+                    is_merged                   = True
 
         return is_merged
 
@@ -288,14 +288,14 @@ class Grid:
                     continue
                     
                 if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]            *= 2
+                    self.board[k][c]           *= 2
                     self.board[r][c]            = 0
                     used[k]                     = 1
                     is_merged                   = True
-                else:
-                    if k - 1 != r:
-                        self.board[k - 1][c]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+
+                elif k - 1 != r:
+                    self.board[k - 1][c]        = self.board[r][c]
+                    self.board[r][c]            = 0
+                    is_merged                   = True
 
         return is_merged
