@@ -61,19 +61,28 @@ class Grid:
         self.random_new_cell()
         self.redraw()
 
-    def has_no_move(self) -> bool:
+    def has_no_move(self, board: list=None) -> bool:
+        """
+        Parameter
+        --------
+            board: list, default = None
+                if board is None grid's board is used
+        """
+        if board is None:
+            board = self.board
+
         # check if there is any empty tile
-        for row in self.board:
+        for row in board:
             for x in row:
                 if x == 0:
                     return False
 
         # check if there is any adjacent tiles which have the same value
-        for r in range(self.ROW):
-            for c in range(self.COLUMN):
-                if 0 <= r + 1 < self.ROW and self.board[r][c] == self.board[r + 1][c]:
+        for r in range(Grid.ROW):
+            for c in range(Grid.COLUMN):
+                if 0 <= r + 1 < Grid.ROW and board[r][c] == board[r + 1][c]:
                     return False
-                if 0 <= c + 1 < self.COLUMN and self.board[r][c] == self.board[r][c + 1]:
+                if 0 <= c + 1 < Grid.COLUMN and board[r][c] == board[r][c + 1]:
                     return False
         
         return True
@@ -157,145 +166,173 @@ class Grid:
             for c in range(COLUMN):
                 des[r].append(src[r][c])
 
-    def move_left(self) -> bool:
+    def move_left(self, board: list=None) -> bool:
         """
-        return True if can merge, else False
+        Parameter
+        ---------
+            board: list, default = None
+                if board is None, use grid's board
+        
+        Return
+        ------
+            True if can merge, else False
         """
+        if board is None:
+            board   = self.board
+
         is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
+        ROW         = Grid.ROW
+        COLUMN      = Grid.COLUMN
 
         for r in range(ROW):
             used    = [0 for c in range(COLUMN)]
 
             for c in range(1, COLUMN):
-                if self.board[r][c] == 0:
+                if board[r][c] == 0:
                     continue
                 
                 k = c - 1
-                while k >= 0 and self.board[r][k] == 0:
+                while k >= 0 and board[r][k] == 0:
                     k -= 1
                 
                 if k == -1:
-                    self.board[r][0]            = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[r][0]             = self.board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
                     continue
                     
-                if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]           *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if board[r][k] == board[r][c] and used[k] == 0:
+                    board[r][k]            *= 2
+                    board[r][c]             = 0
+                    used[k]                 = 1
+                    is_merged               = True
 
                 elif k + 1 != c:
-                    self.board[r][k + 1]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[r][k + 1]         = self.board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
 
         return is_merged
 
-    def move_right(self) -> bool:
+    def move_right(self, board: list=None) -> bool:
+        """
+        see move_left's document
+        """
+        if board is None:
+            board   = self.board
+        
         is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
+        ROW         = Grid.ROW
+        COLUMN      = Grid.COLUMN
 
         for r in range(ROW):
             used    = [0 for c in range(COLUMN)]
 
             for c in range(COLUMN - 2, -1, -1):
-                if self.board[r][c] == 0:
+                if board[r][c] == 0:
                     continue
                 
                 k = c + 1
-                while k < COLUMN and self.board[r][k] == 0:
+                while k < COLUMN and board[r][k] == 0:
                     k += 1
                 
                 if k == COLUMN:
-                    self.board[r][k - 1]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[r][k - 1]         = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
                     continue
                     
-                if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]           *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if board[r][k] == board[r][c] and used[k] == 0:
+                    board[r][k]            *= 2
+                    board[r][c]             = 0
+                    used[k]                 = 1
+                    is_merged               = True
 
                 elif k - 1 != c:
-                    self.board[r][k - 1]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[r][k - 1]         = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
 
         return is_merged
 
-    def move_up(self) -> bool:
+    def move_up(self, board: list=None) -> bool:
+        """
+        see move_left's document
+        """
+        if board is None:
+            board   = self.board
+        
         is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
+        ROW         = Grid.ROW
+        COLUMN      = Grid.COLUMN
 
         for c in range(COLUMN):
             used    = [0 for r in range(ROW)]
 
             for r in range(1, ROW):
-                if self.board[r][c] == 0:
+                if board[r][c] == 0:
                     continue
                 
                 k = r - 1
-                while k >= 0 and self.board[k][c] == 0:
+                while k >= 0 and board[k][c] == 0:
                     k -= 1
                 
                 if k == -1:
-                    self.board[0][c]            = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[0][c]             = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
                     continue
                     
-                if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]           *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if board[k][c] == board[r][c] and used[k] == 0:
+                    board[k][c]            *= 2
+                    board[r][c]             = 0
+                    used[k]                 = 1
+                    is_merged               = True
 
                 elif k + 1 != r:
-                    self.board[k + 1][c]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[k + 1][c]         = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
 
         return is_merged
 
-    def move_down(self) -> bool:
+    def move_down(self, board: list=None) -> bool:
+        """
+        see move_left's document
+        """
+        if board is None:
+            board   = self.board
+
         is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
+        ROW         = Grid.ROW
+        COLUMN      = Grid.COLUMN
 
         for c in range(COLUMN):
             used    = [0 for r in range(ROW)]
             
             for r in range(ROW - 2, -1, -1):
-                if self.board[r][c] == 0:
+                if board[r][c] == 0:
                     continue
                 
                 k = r + 1
-                while k < ROW and self.board[k][c] == 0:
+                while k < ROW and board[k][c] == 0:
                     k += 1
                 
                 if k == ROW:
-                    self.board[k - 1][c]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[k - 1][c]         = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
                     continue
                     
-                if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]           *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if board[k][c] == board[r][c] and used[k] == 0:
+                    board[k][c]            *= 2
+                    board[r][c]             = 0
+                    used[k]                 = 1
+                    is_merged               = True
 
                 elif k - 1 != r:
-                    self.board[k - 1][c]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+                    board[k - 1][c]         = board[r][c]
+                    board[r][c]             = 0
+                    is_merged               = True
 
         return is_merged
