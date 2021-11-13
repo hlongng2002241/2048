@@ -29,6 +29,11 @@ class Evaluation:
         0   0   0   0
         2   4   8   16
         256 128 64  32
+
+        [0, 0, 0, 0]
+        [0, 0, 0, 0]
+        [4, 2, 0, 0]
+        [8, 4, 2, 0]
         (trừ điểm... trừ bao nhiêu điểm?)
 class Score:
     
