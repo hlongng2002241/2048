@@ -2,6 +2,7 @@ import pygame
 import pygame.time as pygame_time
 import pygame.display as pygame_display
 from grid import Grid
+from evaluation import Evaluation 
 
 
 class Application:
@@ -22,6 +23,7 @@ class Application:
         self.window     = pygame_display.set_mode((600, 600))
 
         self.grid       = Grid()
+        self.eval = Evaluation()
 
         # Declaration of minimax algorithm 
         self.minimax    = None  # change this None
@@ -80,7 +82,9 @@ class Application:
                             if self.grid.move_down():
                                 self.grid.random_new_cell()
                                 self.grid.redraw()
-
+                        # get board status in list 
+                        # self.grid.board
+                        print(str(self.eval.mergable_tiles(self.grid.board)))
             if self.grid.has_no_move() is False:
                 if self.PLAY_MODE == self.MODE_AI:
                     if current_time >= TIME_PER_MOVE:
