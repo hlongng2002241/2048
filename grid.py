@@ -2,6 +2,9 @@ from pygame import Surface
 import pygame.font as pygame_font
 import pygame.draw as pygame_draw
 import random
+from typing import Tuple, List
+from copy import deepcopy
+from evaluation import Evaluation
 
 class GridSettings:
     BG_COLOR            = {
@@ -45,7 +48,7 @@ class GridSettings:
 class Grid:
     ROW                 = 4
     COLUMN              = 4
-    RANDOM_4_RATE       = 0.05
+    RANDOM_4_RATE       = 0.1
     RAMDOM_RANGE        = 1000
     
     def __init__(self):
@@ -60,6 +63,19 @@ class Grid:
         self.random_new_cell()
         self.random_new_cell()
         self.redraw()
+
+    def __eq__(self, other) -> bool:
+        for i in range(self.ROW):
+            for j in range(self.COLUMN):
+                if self.board[i][j] != other.board[i][j]:
+                    return False
+        return True
+
+    def get_board(self) -> List:
+        return deepcopy(self.board)
+
+    def set_board(self, board: List) -> None:
+        self.board = deepcopy(board)
 
     def has_no_move(self) -> bool:
         # check if there is any empty tile
@@ -157,145 +173,262 @@ class Grid:
             for c in range(COLUMN):
                 des[r].append(src[r][c])
 
-    def move_left(self) -> bool:
+    def can_move_up(self) -> bool:
         """
         return True if can merge, else False
         """
-        is_merged   = False
+        # loop for all columns
+        # start at the bottom and move upwards ultil find a non-empty element
+        # then, check that there are 2 similar adjacent tiles or there is an empty square
+        ROW, COLUMN = self.ROW, self.COLUMN
+        
+        for j in range(COLUMN):
+            k = -1
+            for i in range(ROW - 1, -1, -1):
+                if self.board[i][j] != 0:
+                    k = i
+                    break
+            if k != -1:
+                for i in range(k, 0, -1):
+                    if self.board[i - 1][j] == 0 or self.board[i][j] == self.board[i - 1][j]:
+                        return True
+        return False
+
+    def can_move_down(self) -> bool:
         ROW         = self.ROW
         COLUMN      = self.COLUMN
 
-        for r in range(ROW):
-            used    = [0 for c in range(COLUMN)]
+        for j in range(COLUMN):
+            k = -1
+            for i in range(ROW):
+                if self.board[i][j] != 0:
+                    k = i
+                    break
+            if k != -1:
+                for i in range(k, ROW - 1):
+                    if self.board[i + 1][j] == 0 or self.board[i + 1][j] == self.board[i][j]:
+                        return True
+        return False
 
-            for c in range(1, COLUMN):
-                if self.board[r][c] == 0:
+    def can_move_left(self) -> bool:
+        ROW = self.ROW
+        COLUMN = self.COLUMN
+
+        for i in range(ROW):
+            k = -1
+            for j in range(COLUMN - 1, -1, -1):
+                if self.board[i][j] != 0:
+                    k = i
+                    break
+            if k != -1:
+                for j in range(k, 0, -1):
+                    if self.board[i][j - 1] == 0 or self.board[i][j - 1] == self.board[i][j]:
+                        return True
+            return False
+
+    def can_move_right(self) -> bool:
+        ROW = self.ROW
+        COLUMN = self.COLUMN
+
+        for i in range(ROW):
+            k = -1
+            for j in range(COLUMN):
+                if self.board[i][j] != 0:
+                    k = i
+                    break
+            if k != -1:
+                for j in range(k, COLUMN - 1):
+                    if self.board[i][j + 1] == 0 or self.board[i][j + 1] == self.board[i][j]:
+                        return True
+        return False
+
+    def get_available_moves_for_max(self) -> List[int]:
+        # Up = 0, Down = 1, Left = 2, Right = 3
+        available_moves = []
+
+        if self.can_move_up():
+            available_moves.append(0)
+        if self.can_move_down():
+            available_moves.append(1)
+        if self.can_move_left():
+            available_moves.append(2)
+        if self.can_move_right():
+            available_moves.append(3)
+
+        return available_moves
+    
+    def get_available_moves_for_min(self) -> List[Tuple[int, int, int]]:
+        empty_squares = []
+        for i in range(self.ROW):
+            for j in range(self.COLUMN):
+                if self.board[i][j] == 0:
+                    if random.random() > 0.9:
+                        empty_squares.append((i, j, 4))
+                    else:
+                        empty_squares.append((i, j, 2))
+        return empty_squares
+
+    def get_num_empty_tiles(self) -> int:
+        return len(self.get_available_moves_for_min())
+
+    def place_tile(self, row: int, column: int, tile: int) -> None:
+        self.board[row][column] = tile
+    
+    def get_children(self, who: str) -> List:
+        if who == 'max':
+            return self.get_available_moves_for_max()
+        elif who == 'min':
+            return self.get_available_moves_for_min()
+        
+    def move_up(self) -> None:
+        ROW, COLUMN = self.ROW, self.COLUMN
+        # Loop over all columns
+        for j in range(COLUMN):
+            # w: the location of the write operation
+            # k: the tile value of the last non-empty cell
+            w = k = 0
+            for i in range(ROW):
+                # skip empty cells
+                if self.board[i][j] == 0:
                     continue
-                
-                k = c - 1
-                while k >= 0 and self.board[r][k] == 0:
-                    k -= 1
-                
-                if k == -1:
-                    self.board[r][0]            = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
-                    continue
-                    
-                if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]            *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                # store the value of the next non-empty cell in k
+                if k == 0:
+                    k = self.board[i][j]
+                # merge 2 same tiles and write the result at location w
+                # increase w and reset k = 0
+                elif self.board[i][j] == k:
+                    self.board[w][j] = 2 * k
+                    w += 1
+                    k = 0
+                # if 2 tiles don't match, write the first tile at location w
+                # increase w and store the second one in k
                 else:
-                    if k + 1 != c:
-                        self.board[r][k + 1]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
-
-        return is_merged
-
-    def move_right(self) -> bool:
-        is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
-
-        for r in range(ROW):
-            used    = [0 for c in range(COLUMN)]
-
-            for c in range(COLUMN - 2, -1, -1):
-                if self.board[r][c] == 0:
-                    continue
+                    self.board[w][j] = k
+                    w += 1
+                    k = self.board[i][j]
+            # after the loop ends, if k still != 0, write this value at location w and increase w
+            if k != 0:
+                self.board[w][j] = k
+                w += 1
+            # empty all cells from w downwards
+            for i in range(w, ROW):
+                self.board[i][j] = 0
                 
-                k = c + 1
-                while k < COLUMN and self.board[r][k] == 0:
-                    k += 1
-                
-                if k == COLUMN:
-                    self.board[r][k - 1]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+    def move_down(self) -> None:
+        ROW, COLUMN = self.ROW, self.COLUMN
+
+        for j in range(COLUMN):
+            w, k = 3, 0
+            for i in range(ROW - 1, -1, -1):
+                if self.board[i][j] == 0:
                     continue
-                    
-                if self.board[r][k] == self.board[r][c] and used[k] == 0:
-                    self.board[r][k]            *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if k == 0:
+                    k = self.board[i][j]
+                elif k == self.board[i][j]:
+                    self.board[w][j] = 2 * k
+                    w -= 1
+                    k = 0
                 else:
-                    if k - 1 != c:
-                        self.board[r][k - 1]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
-
-        return is_merged
-
-    def move_up(self) -> bool:
-        is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
-
-        for c in range(COLUMN):
-            used    = [0 for r in range(ROW)]
-
-            for r in range(1, ROW):
-                if self.board[r][c] == 0:
-                    continue
+                    self.board[w][j] = k
+                    w -= 1
+                    k = self.board[i][j]
+            if k != 0:
+                self.board[w][j] = k
+                w -= 1
+            for i in range(w, -1, -1):
+                self.board[i][j] = 0
                 
-                k = r - 1
-                while k >= 0 and self.board[k][c] == 0:
-                    k -= 1
-                
-                if k == -1:
-                    self.board[0][c]            = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
+    def move_left(self) -> None:
+        ROW, COLUMN = self.ROW, self.COLUMN
+
+        for i in range(ROW):
+            w = k = 0
+            for j in range(COLUMN):
+                if self.board[i][j] == 0:
                     continue
-                    
-                if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]            *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if k == 0:
+                    k = self.board[i][j]
+                elif k == self.board[i][j]:
+                    self.board[i][w] = 2 * k
+                    w += 1
+                    k = 0
                 else:
-                    if k + 1 != r:
-                        self.board[k + 1][c]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+                    self.board[i][w] = k
+                    w += 1
+                    k = self.board[i][j]
+            if k != 0:
+                self.board[i][w] = k
+                w += 1
+            for j in range(w, COLUMN):
+                self.board[i][j] = 0
 
-        return is_merged
+    def move_right(self) -> None:
+        ROW, COLUMN = self.ROW, self.COLUMN
 
-    def move_down(self) -> bool:
-        is_merged   = False
-        ROW         = self.ROW
-        COLUMN      = self.COLUMN
-
-        for c in range(COLUMN):
-            used    = [0 for r in range(ROW)]
-            
-            for r in range(ROW - 2, -1, -1):
-                if self.board[r][c] == 0:
+        for i in range(ROW):
+            w, k = 3, 0
+            for j in range(COLUMN - 1, -1, -1):
+                if self.board[i][j] == 0:
                     continue
-                
-                k = r + 1
-                while k < ROW and self.board[k][c] == 0:
-                    k += 1
-                
-                if k == ROW:
-                    self.board[k - 1][c]        = self.board[r][c]
-                    self.board[r][c]            = 0
-                    is_merged                   = True
-                    continue
-                    
-                if self.board[k][c] == self.board[r][c] and used[k] == 0:
-                    self.board[k][c]            *= 2
-                    self.board[r][c]            = 0
-                    used[k]                     = 1
-                    is_merged                   = True
+                if k == 0:
+                    k = self.board[i][j]
+                elif k == self.board[i][j]:
+                    self.board[i][w] = 2 * k
+                    w -= 1
+                    k = 0
                 else:
-                    if k - 1 != r:
-                        self.board[k - 1][c]    = self.board[r][c]
-                        self.board[r][c]        = 0
-                        is_merged               = True
+                    self.board[i][w] = k
+                    w -= 1
+                    k = self.board[i][j]
+            if k != 0:
+                self.board[i][w] = k
+                w -= 1
+            for j in range(w + 1):
+                self.board[i][j] = 0
 
-        return is_merged
+    def move(self, direction: int) -> None:
+        if direction == 0:
+            self.move_up()
+        elif direction == 1:
+            self.move_down()
+        elif direction == 2:
+            self.move_left()
+        else:
+            self.move_right()
+
+    def get_move_to(self, child: 'Grid') -> int:
+        # return the right action to get the state of child
+        if self.can_move_up():
+            state = Grid()
+            state.move_up()
+            if state == child:
+                return 0
+        if self.can_move_down():
+            state = Grid()
+            state.move_down()
+            if state == child:
+                return 1
+        if self.can_move_left():
+            state = Grid()
+            state.move_left()
+            if state == child:
+                return 2
+        return 3
+
+    def is_terminal(self, who: str) -> bool:
+        if who == 'max':
+            if self.can_move_up():
+                return False
+            if self.can_move_down():
+                return False
+            if self.can_move_left():
+                return False
+            if self.can_move_right():
+                return False
+            return True
+        elif who == 'min':
+            for i in range(4):
+                for j in range(4):
+                    if self.board[i][j] == 0:
+                        return False
+            return True
