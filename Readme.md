@@ -97,14 +97,12 @@ Run our program from main.py file
         + If the names are meaningful, no comment is feasible
 
     3. (`=` arrangement) for readable code, we should write `=` like this: <br>
-        """
         self._current_score     = 0 
         self._best_score        = 0 
         self.titles             = ['SCORE', 'BEST'] 
 
         self.font_title         = SharedFont().get_font(self.TITLE_SIZE) 
         self.font_title.bold    = True 
-        """
 
         + note: use tab to arrange
 
