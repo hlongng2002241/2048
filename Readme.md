@@ -43,7 +43,7 @@ The directory:
 
 Run our program from main.py file
 
-### End-to-end rules to work in this project
+## End-to-end rules to work in this project
 + General rules
     1. (GitHub `fetch`) You must `fetch` (and `pull`) every time before making changes and/or uploading to the repo.
     2. (GitHub `commit` message) You should write a meaningful (and short) commit message. Description is helpful if you are making lots of changes.
