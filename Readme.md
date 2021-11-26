@@ -1,8 +1,8 @@
 # 2048 AI
 ## Introduction
-A capstone project for Introduction to Artificial Intelligence course. <br/>
-A quick introduction of the problem: you should check file introduction.pdf in docs folder for more information. <br/>
-All classes information are in docs/Classes.md, I recommend you to read this file before coding.
++ A capstone project for Introduction to Artificial Intelligence course. <br/>
++ A quick introduction of the problem: you should check file introduction.pdf in docs folder for more information. <br/>
++ All classes information are in docs/Classes.md, I recommend you to read this file before coding.
 
 ## Collaborators
 We are K65 of major Data Science and Artificial Intelligence of Hanoi University of Science and Technology.
