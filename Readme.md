@@ -96,13 +96,13 @@ Run our program from main.py file
 
         + If the names are meaningful, no comment is feasible
 
-    3. (`=` arrangement) for readable code, we should write `=` like this:
-        self._current_score     = 0
-        self._best_score        = 0
-        self.titles             = ['SCORE', 'BEST']
+    3. (`=` arrangement) for readable code, we should write `=` like this: <br>
+        self._current_score     = 0 <br>
+        self._best_score        = 0 <br>
+        self.titles             = ['SCORE', 'BEST'] <br>
 
-        self.font_title         = SharedFont().get_font(self.TITLE_SIZE)
-        self.font_title.bold    = True
+        self.font_title         = SharedFont().get_font(self.TITLE_SIZE) <br>
+        self.font_title.bold    = True <br>
 
         + note: use tab to arrange
 
