@@ -38,8 +38,8 @@
   
 ## About Game Play and UI:
 + Game:
-  + Contributors: Long, ..
-  + Status: Complete
+  + Contributors: Long, Dũng ..
+  + Status: Processing
 + UI (Menu):
   + Contributors: Long, ..
   + Status: Complete
