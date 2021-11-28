@@ -62,45 +62,45 @@ Run our program from main.py file
          + for private variable:     use `__` prefix with lower snake case: __private_value
       ```
   2. (Comment conventions) You must comment for every object and every method.
-    + Comment format for method:
-      ```
-      def <name_function>(<parameters>) -> <return_type>:
-          """
-          <method_description>
+      + Comment format for method:
+        ```
+        def <name_function>(<parameters>) -> <return_type>:
+            """
+            <method_description>
 
-          Parameters
-          ----------
-              <parameter_name>: <type>, default = ... (if you have default value)
-                  <parameter_description>
+            Parameters
+            ----------
+                <parameter_name>: <type>, default = ... (if you have default value)
+                    <parameter_description>
 
-          Returns
-          -------
-              <return_name>: <type>
-                  <return_description>
-          """
-      ```
+            Returns
+            -------
+                <return_name>: <type>
+                    <return_description>
+            """
+        ```
    
-    + example:
-      ```
-      def has_no_move(self, board: list=None) -> bool:
+      + example:
+        ```
+        def has_no_move(self, board: list=None) -> bool:
+            """
+            Check if there is any movement can be applied in the given board
+          
+            Parameters
+            ----------
+                board: list, default = None
+                    4x4 board
+                    if board is None grid's board is used
+          
+            Returns
+            -------
+                value: bool
           """
-          Check if there is any movement can be applied in the given board
-        
-          Parameters
-          ----------
-              board: list, default = None
-                  4x4 board
-                  if board is None grid's board is used
-        
-          Returns
-          -------
-              value: bool
-        """
-      ```
+        ```
 
-    + comment for object: write in the line above object declaration. 
+      + comment for object: write in the line above object declaration. 
 
-    + If the names are meaningful, no comment is feasible
+      + If the names are meaningful, no comment is feasible
 
   3. (`=` arrangement) for readable code, we should write `=` like this:
       ```
@@ -112,7 +112,7 @@ Run our program from main.py file
       self.font_title.bold    = True
       ```
 
-    + note: use tab to arrange
+      + note: use tab to arrange
 
   4. (OOP) You must use Object Oriented Programming, and try to avoid writing too much code in the main program without putting them in an object.
   5. (Absolute import) Most of the time, if you want to use an object from another folders, you should use [absolute import](https://www.geeksforgeeks.org/absolute-and-relative-imports-in-python/).
