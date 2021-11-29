@@ -202,6 +202,13 @@ class Grid:
             for c in range(COLUMN):
                 des[r].append(src[r][c])
 
+    def __eq__(self, other) -> bool:
+        for i in range(self.ROW):
+            for j in range(self.COLUMN):
+                if self.board[i][j] != other.board[i][j]:
+                    return False
+        return True
+
     def can_move_up(self) -> bool:
         """
         Returns
