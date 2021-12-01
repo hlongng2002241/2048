@@ -3,8 +3,8 @@ from pygame.constants import BLENDMODE_ADD
 from game.grid import Grid
 
 class Evaluation:   
-    GAME_OVER           = -999999999  
-    INFINITY            = 99999999999 
+    GAME_OVER           = -9999999999
+    INFINITY            = 999999999999 
 
     # WEIGHTS_MATRIX      = [
     #     [1 ** 1, 4 ** 1, 5 ** 1, 4 ** 2],
