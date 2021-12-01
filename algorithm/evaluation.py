@@ -111,6 +111,15 @@ class Evaluation:
         return cnt
 
     def _choose_weight_index(self, board: list) -> int:
+        """
+        Choose the suitable weight matrix for the evaluation
+        This bases on the playing strategy of the AI
+            It check from the last row to the first one
+            If the last row is not good, use 0
+            If the last row is good enough, use 1
+            If the last row and the second last row is good enough, use 2
+            And so on ...
+        """
         # store to a new array
         values = list()
         for row in board:
