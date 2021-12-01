@@ -182,26 +182,25 @@ class Grid:
         self.random_new_tile()
         self.redraw()
 
-    # @staticmethod
-    # def copy(src: list, des: list):
-    #     """
-    #     This function is used to copy the board's values
-    #     I recommend you to use deepcopy instead as this function may bring some bugs :((
+    @staticmethod
+    def copy(src: list, des: list):
+        """
+        This function is used to copy the board's values
 
-    #     Parameters
-    #     ----------
-    #         src: list
-    #             source
+        Parameters
+        ----------
+            src: list
+                source
             
-    #         des: list
-    #             destination
-    #     """
-    #     des.clear()
-    #     ROW, COLUMN = Grid.ROW, Grid.COLUMN
-    #     for r in range(ROW):
-    #         des.append([])
-    #         for c in range(COLUMN):
-    #             des[r].append(src[r][c])
+            des: list
+                destination
+        """
+        des.clear()
+        ROW, COLUMN = Grid.ROW, Grid.COLUMN
+        for r in range(ROW):
+            des.append([])
+            for c in range(COLUMN):
+                des[r].append(src[r][c])
 
     def __eq__(self, other) -> bool:
         for i in range(self.ROW):
