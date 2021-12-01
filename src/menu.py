@@ -50,8 +50,20 @@ class Menu:
         Button("7", font_size, 180, 77, 85, 40, form_depth).callback            = lambda: self._set_depth(7)
         Button("8", font_size, 270, 77, 85, 40, form_depth).callback            = lambda: self._set_depth(8)
 
+        form_replay                 = Form(self.menu)
+        form_replay.position        = (-400, 85)
+        Label("Replay:", font_size, 0, 0, form_replay)
+        Button("On", font_size, 85, 0, 50, 40, form_replay).callback            = lambda: self._set_replay_mode(True)
+        Button("Off", font_size, 140, 0, 50, 40, form_replay).set_state(Button.TOGGLE).callback = lambda: self._set_replay_mode(False)
+        
         self.new_game               = Button("New Game", 22, -170, 80, 140, 50, self)
         self.new_game.callback      = lambda: self._button_new_game()
+
+    def _set_replay_mode(self, on: bool):
+        if self.gameplay.is_loaded == on:
+            return
+        self.gameplay.is_loaded     = on
+        self.gameplay.state.switch()
 
     def _button_new_game(self):
         self.gameplay.new_game()
