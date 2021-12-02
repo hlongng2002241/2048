@@ -1,0 +1,9 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# txt file
+*.txt
+
+# Vscode folder
+.vscode/
