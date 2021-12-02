@@ -31,6 +31,7 @@ class Minimax(Algorithm):
             state = Grid(None)
             # create an instant for Grid 
             Grid.copy(grid.board, state.board)
+            # copy from source to destination
             state.move(move)
             temp_score = max_score
             max_score = max(max_score, self.min_player(state, depth + 1))
@@ -58,6 +59,8 @@ class Minimax(Algorithm):
         # there is no need to find best move for min!!!
     
     def best_move(self, grid: Grid):
+        # function best move set a optimal move for the current states (not just tell)
+        # the move only
         grid.move(self.max_player(grid, 1)[0], True)
 
 
