@@ -3,9 +3,9 @@ from ui.button import Button
 from ui.form import Form
 from ui.label import Label
 from . gameplay import GamePlay
-from algorithm.expectmax import Expectmax
-# from algorithm.minimax import Minimax
-from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
+# from algorithm.expectmax import Expectmax
+from algorithm.minimax import Minimax
+# from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
 
 
 class Menu:

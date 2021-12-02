@@ -4,8 +4,8 @@ from . utility import SharedFont
 from game.grid import Grid
 from game.score import Score
 from game.state import State
-from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
-
+# from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
+from algorithm.minimax import Minimax
 
 class GamePlay:
     # Game Mode
@@ -31,7 +31,7 @@ class GamePlay:
         self.game_name_pos      = (30, 21)
 
         # Declaration of algorithm, default: Minimax
-        self.algorithm          = MinimaxAlphaBeta(4)  # change this None
+        self.algorithm          = Minimax(4)  # change this None
 
         self.state              = State("log.txt")
         self.is_loaded          = False
