@@ -520,19 +520,25 @@ class Grid:
             for j in range(w + 1):
                 self.board[i][j] = 0
 
-    def move(self, direction: int) -> None:
+    def move(self, direction: int, calculate_score=False) -> None:
         """
         Indices for directions:
             Up = 0, Down = 1, Left = 2, Right = 3
+
+        Parameters
+        ----------
+        direction: int
+
+        calculate_score: bool
         """
         if direction == 0:
-            self.move_up()
+            self.move_up(calculate_score)
         elif direction == 1:
-            self.move_down()
+            self.move_down(calculate_score)
         elif direction == 2:
-            self.move_left()
+            self.move_left(calculate_score)
         else:
-            self.move_right()
+            self.move_right(calculate_score)
 
     def get_move_to(self, child: "Grid") -> int:
         """
