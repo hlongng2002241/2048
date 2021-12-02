@@ -15,28 +15,28 @@ class Evaluation:
 
     WEIGHTS_MATRIX       = [
         [
-            [20, 7, 4, 1],
-            [200, 70, 40, 10],
-            [2000, 700, 400, 100],
-            [20000, 7000, 4000, 1000],
+            [10, 7, 4, 1],
+            [100, 70, 40, 10],
+            [1000, 700, 400, 100],
+            [30000, 7000, 4000, 1000],
         ],
         [
-            [1, 4, 7, 20],
-            [10, 40, 70, 200],
-            [100, 400, 700, 2000],
-            [20000, 7000, 4000, 1000],
+            [1, 4, 7, 10],
+            [10, 40, 70, 100],
+            [100, 400, 700, 1000],
+            [30000, 7000, 4000, 1000],
         ],
         [
-            [20, 7, 4, 1],
-            [200, 70, 40, 10],
-            [100, 400, 700, 2000],
-            [20000, 7000, 4000, 1000],
+            [10, 7, 4, 1],
+            [100, 70, 40, 10],
+            [100, 400, 700, 1000],
+            [30000, 7000, 4000, 1000],
         ],
         [
-            [1, 4, 7, 20],
-            [200, 70, 40, 10],
-            [100, 400, 700, 2000],
-            [20000, 7000, 4000, 1000],
+            [1, 4, 7, 10],
+            [100, 70, 40, 10],
+            [100, 400, 700, 1000],
+            [30000, 7000, 4000, 1000],
         ]
     ]
                           
@@ -68,7 +68,7 @@ class Evaluation:
         total += 1 * self._evaluate_average(grid.board)
         total += 40 * self._evaluate_potential_merge(grid.board)
         total += 30 * self._evaluate_empty_tile(grid.board)
-        # total += self._evaluate_biggest_tile(grid.board)
+        total += self._evaluate_biggest_tile(grid.board)
         return total
         
     def _evaluate_average(self, board: list) -> int:
@@ -178,7 +178,7 @@ class Evaluation:
         
         if board[3][0] == mx:
             return mx * self.WEIGHTS_MATRIX[0][3][0]
-        return -self.INFINITY
+        return self.GAME_OVER
 
     
     # WEIGHTS_MATRIX       = [
