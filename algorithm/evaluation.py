@@ -15,28 +15,28 @@ class Evaluation:
 
     WEIGHTS_MATRIX       = [
         [
-            [10, 7, 4, 1],
-            [100, 70, 40, 10],
-            [1000, 700, 400, 100],
-            [30000, 7000, 4000, 1000],
+            [10, 7, 3, 1],
+            [100, 70, 30, 10],
+            [1000, 700, 300, 100],
+            [40000, 7000, 3000, 1000],
         ],
         [
-            [1, 4, 7, 10],
-            [10, 40, 70, 100],
-            [100, 400, 700, 1000],
-            [30000, 7000, 4000, 1000],
+            [1, 3, 7, 10],
+            [10, 30, 70, 100],
+            [200, 600, 1400, 2000],
+            [40000, 7000, 3000, 2000],
         ],
         [
-            [10, 7, 4, 1],
-            [100, 70, 40, 10],
-            [100, 400, 700, 1000],
-            [30000, 7000, 4000, 1000],
+            [10, 7, 3, 1],
+            [200, 140, 60, 20],
+            [200, 600, 1400, 2000],
+            [40000, 7000, 3000, 2000],
         ],
         [
-            [1, 4, 7, 10],
-            [100, 70, 40, 10],
-            [100, 400, 700, 1000],
-            [30000, 7000, 4000, 1000],
+            [2, 6, 14, 20],
+            [200, 140, 60, 20],
+            [200, 600, 1400, 2000],
+            [40000, 7000, 3000, 2000],
         ]
     ]
                           
@@ -68,7 +68,7 @@ class Evaluation:
         total += 1 * self._evaluate_average(grid.board)
         total += 40 * self._evaluate_potential_merge(grid.board)
         total += 30 * self._evaluate_empty_tile(grid.board)
-        total += self._evaluate_biggest_tile(grid.board)
+        # total += self._evaluate_biggest_tile(grid.board)
         return total
         
     def _evaluate_average(self, board: list) -> int:
@@ -110,7 +110,7 @@ class Evaluation:
 
         return cnt
 
-    def _choose_weight_index(self, board: list) -> int:
+    def choose_weight_index(self, board: list, is_strict: bool) -> int:
         """
         Choose the suitable weight matrix for the evaluation
         This bases on the playing strategy of the AI
@@ -128,16 +128,23 @@ class Evaluation:
 
         values.sort(reverse=True)    
 
-        def check_row(r, reverse) -> bool:    
+        def is_good_enough(r, reverse) -> bool:    
             if reverse:
                 index_c = range(self.COLUMN - 1, -1, -1)
             else:
                 index_c = range(self.COLUMN)
 
-            ii = (self.ROW - 1 - r) * self.COLUMN
+            strike = 0
+            
             for c in index_c:
-                if values[ii] == board[r][c] and values[ii] != 0:
-                    ii += 1
+                if values[0] != 0:
+                    if values[0] == board[r][c]:
+                        values.pop(0)
+                        strike += 1
+                    elif is_strict is False and strike == 3 and values[1] != 0 and values[1] == board[r][c]:
+                        values.pop(1)
+                    else:
+                        return False
                 else:
                     return False
 
@@ -145,7 +152,7 @@ class Evaluation:
 
         idx = 0
         for r in range(self.ROW - 1, 0, -1):
-            if check_row(r, not bool(r % 2)):
+            if is_good_enough(r, not bool(r % 2)):
                 idx += 1
             else:
                 break
@@ -162,7 +169,8 @@ class Evaluation:
                 return self.GAME_OVER
         
         cnt = 0
-        idx = self._choose_weight_index(grid.board)
+        idx = self.choose_weight_index(grid.board, False)
+        # idx = 3
         
         for r in range(self.ROW):
             for c in range(self.COLUMN):
