@@ -310,6 +310,24 @@ class Grid:
                         return True
         return False
 
+    def can_move(self, direction) -> bool:
+        """
+        Indices for movements:
+            Up = 0, Down = 1, Left = 2, Right = 3
+
+        Returns
+        -------
+            can_move: bool
+        """
+        if direction == 0:
+            return self.can_move_up()
+        if direction == 1:
+            return self.can_move_down()
+        if direction == 2:
+            return self.can_move_left()
+        if direction == 3:
+            return self.can_move_right()
+
     def get_available_moves_for_max(self) -> list[int]:
         """
         Indices for movements:
