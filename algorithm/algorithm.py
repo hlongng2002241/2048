@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from . evaluation import Evaluation, Point
+from . evaluation import Evaluation
 from game.grid import Grid
 
 

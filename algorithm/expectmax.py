@@ -1,4 +1,5 @@
-from . algorithm import Algorithm, Point
+from . algorithm import Algorithm
+from . point import Point
 from game.grid import Grid
 
 
