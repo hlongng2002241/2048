@@ -2,33 +2,29 @@
 ## About Algorithms:
 + Minimax: 
   + Contributors: An, ..
-  + Status: Processing
+  + Status: Optimizing
 + Minimax with Alpha Beta prune:
   + Contributors: Dũng, ..
-  + Status: Processing
+  + Status: Optimizing
 + Expectmax:
   + Contributors: Dũng, ..
+  + Status: Optimizing
++ New Minimax and Expectmax:
+  + Contributors:
   + Status: Processing
-+ Combination of expectmax and minimax:
++ Combination of Expectmax and Minimax:
   + Contributors: Minh, ..
   + Status: Processing
 + Evaluation:
-  + Contributors:
-  + Status:
-+ Detect errors and wrong decision of each algorithm:
-  + Activities:
-    + Set the depth of algorithm to 4 (or any number you want) and the number of movements per second to 5
-    + Watch the game to find out the bad decision (for example, the highest tile is often located at the conner and suddenly leave that place)
-    + Detect the `bad cases`, which lead to all the bad decision above
-  + Contributors:
-  + Status:
+  + Contributors: Long
+  + Status: Optimizing
 
 ## About Statistics:
 + Collect the highest tile after each game and show them with diagram (graph):
   + Activities:
     + Get the data from 500 to 1000 games and calculate the rate of achieving each tile
   + Contributors:
-  + Status:  
+  + Status: Pending
 
 ## About Presentation:
 + Structure of the presentation:
