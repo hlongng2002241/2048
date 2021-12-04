@@ -3,8 +3,7 @@ import pygame.draw as pygame_draw
 from src.utility import SharedFont
 import random
 from . score import Score
-from typing import List, Tuple
-from copy import deepcopy
+from typing import Tuple, List
 
 
 class GridSettings:
@@ -71,7 +70,7 @@ class Grid:
         self.random_new_tile()
         self.redraw()
 
-    def has_no_move(self, board: list=None) -> bool:
+    def has_no_move(self, board: list = None) -> bool:
         """
         I recommend to use is_terminal instead as this function will be removed soon
         
@@ -100,7 +99,7 @@ class Grid:
                     return False
                 if 0 <= c + 1 < Grid.COLUMN and board[r][c] == board[r][c + 1]:
                     return False
-
+        
         return True
 
     def random_new_tile(self):
@@ -515,19 +514,25 @@ class Grid:
             for j in range(w + 1):
                 self.board[i][j] = 0
 
-    def move(self, direction: int) -> None:
+    def move(self, direction: int, calculate_score=False) -> None:
         """
         Indices for directions:
             Up = 0, Down = 1, Left = 2, Right = 3
+
+        Parameters
+        ----------
+        direction: int
+
+        calculate_score: bool
         """
         if direction == 0:
-            self.move_up()
+            self.move_up(calculate_score)
         elif direction == 1:
-            self.move_down()
+            self.move_down(calculate_score)
         elif direction == 2:
-            self.move_left()
+            self.move_left(calculate_score)
         else:
-            self.move_right()
+            self.move_right(calculate_score)
 
     def is_terminal(self, who: str) -> bool:
         """
