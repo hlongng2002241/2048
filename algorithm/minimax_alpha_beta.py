@@ -6,7 +6,7 @@ class MinimaxAlphaBeta(Algorithm):
     def __init__(self, max_depth) -> None:
         super().__init__(max_depth=max_depth)
 
-        self.__use_invert_sum   = False
+        self.__use_invert_sum   = True
         # self.__weights          = [0, 256, 128, 64, 32, 16, 8, 4, 2, 1]
         self.__weights          = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256]
         # self.__weights          = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
