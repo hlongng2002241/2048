@@ -7,3 +7,5 @@ __pycache__/
 
 # Vscode folder
 .vscode/
+
+tester.py
