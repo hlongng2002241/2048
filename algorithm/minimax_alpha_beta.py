@@ -6,7 +6,7 @@ class MinimaxAlphaBeta(Algorithm):
     def __init__(self, max_depth) -> None:
         super().__init__(max_depth=max_depth)
 
-        self.__use_invert_sum   = True
+        self.__use_invert_sum   = False
         # self.__weights          = [0, 256, 128, 64, 32, 16, 8, 4, 2, 1]
         self.__weights          = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256]
         # self.__weights          = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -16,9 +16,8 @@ class MinimaxAlphaBeta(Algorithm):
         Returns
         -------
             tuple of best_move and best_score
-        
         """
-        current_score       = self.eval.evaluate(grid, True)
+        current_score           = self.eval.evaluate(grid, True)
         
         if depth >= self.max_depth:
             if self.__use_invert_sum:
@@ -28,19 +27,19 @@ class MinimaxAlphaBeta(Algorithm):
         if current_score == self.eval.GAME_OVER:
             return -1, current_score * (self.max_depth - depth + 1) 
 
-        dirs                = [1, 2, 3]
-        best_move           = -1
-        best_score          = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
+        dirs                    = [1, 2, 3]
+        best_move               = -1
+        best_score              = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
 
         for direct in dirs:
-            save_board      = list()
+            save_board          = list()
             if grid.can_move(direct):
                 grid.copy(grid.board, save_board)
                 grid.move(direct)
-                _, score    = self.min_move(grid, depth + 1, alpha, beta)
+                _, score        = self.min_move(grid, depth + 1, alpha, beta)
                 grid.copy(save_board, grid.board)
 
-                score      += current_score * int(self.__use_invert_sum) * self.__weights[depth]
+                score          += current_score * int(self.__use_invert_sum) * self.__weights[depth]
                 
                 if best_score < score:
                     best_score  = score
@@ -87,7 +86,7 @@ class MinimaxAlphaBeta(Algorithm):
                     score              += current_score * int(self.__use_invert_sum) * self.__weights[depth]
 
                     if best_score > score:
-                        best_score = score
+                        best_score      = score
 
                     if beta > best_score:
                         beta            = best_score
@@ -97,11 +96,11 @@ class MinimaxAlphaBeta(Algorithm):
         return -1, best_score
 
     def best_move(self, grid: Grid):
-        alpha       = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
-        beta        = self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
-        move_idx, _ = self.max_move(grid, 0, alpha, beta)
+        alpha               = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
+        beta                = self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
+        move_idx, _         = self.max_move(grid, 0, alpha, beta)
         
-        if move_idx != -1:
+        if move_idx        != -1:
             grid.move(move_idx, True)
         else:
             if grid.can_move_up():

@@ -38,7 +38,7 @@ class Expectmax(Algorithm):
             if grid.can_move(direct):
                 grid.copy(grid.board, save_board)
                 grid.move(direct)
-                _, score    = self.min_move(grid, depth + 1)
+                _, score    = self.expect_move(grid, depth + 1)
                 grid.copy(save_board, grid.board)
 
                 score      += current_score * int(self.__use_invert_sum) * self.__weights[depth]
@@ -49,7 +49,7 @@ class Expectmax(Algorithm):
 
         return best_move, best_score
 
-    def min_move(self, grid: Grid, depth) -> tuple[int, int]:
+    def expect_move(self, grid: Grid, depth) -> tuple[int, int]:
         """
         Returns
         -------
