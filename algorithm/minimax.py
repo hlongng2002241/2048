@@ -6,17 +6,6 @@ class Minimax(Algorithm):
     def __init__(self, max_depth: int) -> None:
         super().__init__(max_depth)
 
-    # def minimax(self, grid: Grid, depth, is_max_player):        
-    #     current_score = grid.board.evaluate()
-    #     # function evaluate has not been written yet
-    #     if depth == 0 or grid.is_terminal("max"):
-    #         return current_score
-    #     if is_max_player:
-    #         point = - infinity
-    #         for child in get_children("max"):
-    #         # get children max return list of possible
-    #         # moves(including 0,1,2,3)
-    #             temp_point = minimax(""child nodes"")
 
     def max_player(self, grid: Grid, depth):
         current_score = self.eval.evaluate(grid, True)
@@ -40,7 +29,8 @@ class Minimax(Algorithm):
         if depth == 1:
             return best_move, max_score
         return max_score
-            
+
+
     def min_player(self, grid:Grid, depth):
         current_score = self.eval.evaluate(grid, False)
         if depth == self.max_depth or grid.is_terminal("max"):
@@ -57,7 +47,7 @@ class Minimax(Algorithm):
             return min_score
         return min_score
         # there is no need to find best move for min!!!
-    
+     
     def best_move(self, grid: Grid):
         # function best move set a optimal move for the current states (not just tell)
         # the move only
