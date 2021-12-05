@@ -112,13 +112,13 @@ class Evaluation:
 
     def choose_weight_index(self, board: list, is_strict: bool) -> int:
         """
-        Choose the suitable weight matrix for the evaluation
-        This bases on the playing strategy of the AI
-            It check from the last row to the first one
-            If the last row is not good, use 0
-            If the last row is good enough, use 1
-            If the last row and the second last row is good enough, use 2
-            And so on ...
+        + Choose the suitable weight matrix for the evaluation
+        + This bases on the playing strategy of the AI
+            - It check from the last row to the first one
+            - If the last row is not good, use 0
+            - If the last row is good enough, use 1
+            - If the last row and the second last row is good enough, use 2
+            - And so on ...
         """
         # store to a new array
         values = list()
@@ -170,6 +170,9 @@ class Evaluation:
         
         cnt = 0
         idx = self.choose_weight_index(grid.board, False)
+        # => có phần strict và non-strict, cả hai đều có kết quả tốt
+        # để non-strict chữa lỗi tốt hơn
+        # còn để strict nếu ko có lỗi khi chơi sẽ cho kết quả tốt hơn
         # idx = 3
         
         for r in range(self.ROW):

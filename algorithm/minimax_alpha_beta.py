@@ -6,13 +6,26 @@ class MinimaxAlphaBeta(Algorithm):
     def __init__(self, max_depth) -> None:
         super().__init__(max_depth=max_depth)
 
-        self.__use_invert_sum   = True
+        self.__use_invert_sum   = False
         # self.__weights          = [0, 256, 128, 64, 32, 16, 8, 4, 2, 1]
         self.__weights          = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256]
         # self.__weights          = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
     def max_move(self, grid: Grid, depth: int, alpha: int, beta: int) -> tuple[int, int]:
         """
+        Visual and calculate next move for max player (move the board)
+
+        Parameters
+        ----------
+            grid: Grid
+                the current grid
+            depth: int
+                current depth
+            alpha: int
+                alpha value used for pruning
+            beta: int 
+                beta value used for pruning
+        
         Returns
         -------
             tuple of best_move and best_score
@@ -54,6 +67,19 @@ class MinimaxAlphaBeta(Algorithm):
 
     def min_move(self, grid: Grid, depth: int, alpha: int, beta: int) -> tuple[int, int]:
         """
+        Visual and calculate next move for min player (random new tile)
+
+        Parameters
+        ----------
+            grid: Grid
+                the current grid
+            depth: int
+                current depth
+            alpha: int
+                alpha value used for pruning
+            beta: int 
+                beta value used for pruning
+        
         Returns
         -------
             tuple of best_move and best_score
