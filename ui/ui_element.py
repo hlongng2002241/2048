@@ -4,6 +4,12 @@ import pygame
 
 class UiElement:
     def __init__(self, parent=None) -> None:
+        """
+        Parameters
+        ----------
+            parent: default=None
+                parent must has attribute "position" as tuple(int, int)
+        """
         self.position   = (0, 0)
         self.bg         = Surface((0, 0))
         self.parent     = parent
