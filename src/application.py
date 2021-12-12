@@ -46,7 +46,7 @@ class Application:
     
     def draw(self):
         # self.screen.fill((0, 0, 0))
-        self.screen.fill((250, 248, 240))
+        self.screen.fill((232, 240, 242))
         
         self.gameplay.draw(self.screen)
         self.menu.draw(self.screen)

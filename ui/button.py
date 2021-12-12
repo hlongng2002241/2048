@@ -5,15 +5,15 @@ from .ui_element import UiElement, Event, Surface
 
 
 class Button(UiElement):
-    BG_COLOR            = (250, 248, 240)
+    BG_COLOR            = (232, 240, 242)
     NORMAL_TEXT         = (255, 255, 255)
-    NORMAL_BOX          = (140, 122, 104)
+    NORMAL_BOX          = (58, 161, 218)
 
     SELECTED_TEXT       = (255, 255, 255)
-    SELECTED_BOX        = (160, 142, 124)
+    SELECTED_BOX        = (115, 187, 231)
     
     TOGGLE_TEXT         = (255, 255, 255)
-    TOGGLE_BOX          = (170, 142, 124)
+    TOGGLE_BOX          = (164, 218, 246)
 
     NORMAL              = 0
     TOGGLE              = 1

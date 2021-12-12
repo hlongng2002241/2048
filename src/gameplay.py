@@ -27,7 +27,7 @@ class GamePlay:
 
         font                    = SharedFont().get_font(72)
         font.bold               = True
-        self.game_name          = font.render("2048", True, (118, 110, 102))
+        self.game_name          = font.render("2048", True, (3,55,66))
         self.game_name_pos      = (30, 21)
 
         # Declaration of algorithm, default: Minimax

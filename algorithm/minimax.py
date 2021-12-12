@@ -51,7 +51,7 @@ class Minimax(Algorithm):
     def best_move(self, grid: Grid):
         # function best move set a optimal move for the current states (not just tell)
         # the move only
-        grid.move(self.max_player(grid, 1)[0], True)
+        grid.move(self.max_player(grid, 1)[0])
 
 
     

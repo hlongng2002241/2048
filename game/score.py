@@ -5,9 +5,9 @@ from src.utility import SharedFont
 
 class Score:
     BACKGROUND_COLOR            = (255, 255, 255)
-    BOX_COLOR                   = (185, 173, 161)
+    BOX_COLOR                   = (164, 218, 246)
     SCORE_COLOR                 = (255, 255, 255)
-    TITLE_COLOR                 = (236, 228, 219)
+    TITLE_COLOR                 = (3,55,66)
 
     TITLE_SIZE                  = 16
     SCORE_SIZE                  = 24
