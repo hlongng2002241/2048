@@ -77,7 +77,7 @@ class Button(UiElement):
                 if self.state == self.NORMAL:
                     self.set_state(self.SELECTED)
             else:
-                if self.state == self.SELECTED:
+                if self.state == self.SELECTED or self.__is_pressed:
                     self.set_state(self.NORMAL)
                 self.__is_pressed = False
 
@@ -85,18 +85,18 @@ class Button(UiElement):
             x, y = pygame.mouse.get_pos()
             if self.global_bound().collidepoint(x, y):
                 self.__is_pressed = True
+                if self.state != self.TOGGLE:
+                    self.set_state(self.TOGGLE)
                 
         elif event.type == pygame.MOUSEBUTTONUP:
             x, y = pygame.mouse.get_pos()
             if self.global_bound().collidepoint(x, y) and self.__is_pressed:
                 self.__is_pressed = False
-                if self.state != self.TOGGLE:
-                    if self.parent is not None and isinstance(self.parent, UiElement) and self.parent.name() == "Form":
-                        self.parent.deselect_all_buttons()
-                    
-                    self.set_state(self.TOGGLE)
-                    if self.callback is not None:
-                        self.callback()
+                if self.parent is not None and isinstance(self.parent, UiElement) and self.parent.name() == "Form":
+                    self.parent.deselect_all_buttons(except_btn=self)
+                
+                if self.callback is not None:
+                    self.callback()
 
 
     
