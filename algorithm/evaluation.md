@@ -4,19 +4,18 @@
 + There are lots of ways to achieve this and here is our strategy:
   + The average score of none empty tiles
   + The number of empty tiles
-  + The location of the largest tile (here we give 2048 score for the right location)
   + The number of possible merges
-  + The structure of the board or we call it monotonicity of the board
+  + The structure of the board or we can call it monotonicity of the board
 
-  + `Note`: Here we use the weight for each evaluation: <br/>
-        1, 30, 1, 40, 2 <br/>
+  + `Note`: We use the weight for each evaluation: <br/>
+        1, 30, 40, 2 <br/>
         with respect to the same order as above <br/>
 
 ## Details:
-### Let's start with the first evaluation: Average value of none empty tile:
+### Let's start with the first evaluation: Average value of none empty tiles:
 + Like its name, it is pretty simple to understand.
 + Here is the code:
-    ```
+    ```python
     def _evaluate_average(self, board: list) -> int:
         s, cnt          = 0, 0
         for row in board:
@@ -28,7 +27,8 @@
     ```
 
 ### Next is the easiest evaluation: Number of empty tiles:
-    ```
++ We simply access all tiles in the board with two nest for-loop and check if their are empty or not
+    ```python
     def _evaluate_empty_tile(self, board: list) -> int:
         cnt             = 0
         for row in board:
@@ -38,29 +38,15 @@
         return cnt
     ```
 
-### The following evaluation is: Location of the largest tile:
-+ We set this tile to the left bottom conner of the board
-    ```
-    def _evaluate_biggest_tile(self, board: list) -> int:
-        mx = 0
-        for row in board:
-            for x in row:
-                mx = max(mx, x)
-        
-        if board[3][0] == mx:
-            return mx * self.WEIGHTS_MATRIX[0][3][0]
-        return self.GAME_OVER
-    ```
-
 ### After that, we get the evaluation which is a bit harder to handle: Number of possible merge:
 + The idea is really easy:
-  + First, we initialize 2 list to mark down the tiles which are counted 
+  + First, we initialize 2 list to mark down the tiles which are counted before
   + Second, we search for two tiles which are adjacent and have the same tile
     + If those are in the same row, check if they are used or not
     + If none of they are used, increase `cnt` to the sum of their values
     + Same with column
 
-    ```
+    ```python
     def _evaluate_potential_merge(self, board: list) -> int:
         used_in_R       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
         used_in_C       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
@@ -86,7 +72,7 @@
 
 ### Finally we handle the hardest evaluation: Monotonicity of the board
 + Start with the weight matrix:
-    ```
+    ```python
         [1, 4, 7, 10],
         [100, 70, 40, 10],
         [100, 400, 700, 1000],
@@ -101,8 +87,8 @@
   + if the last and second last rows are good enough, we use matrix number 2
   + and so on ...
 + `Note`: `good enough` is just a way of speaking
-+ Here is the code to choose matrix index:
-    ```
++ Here is the code to choose suitable matrix:
+    ```python
     def _choose_weight_index(self, board: list) -> int:
         """
         Choose the suitable weight matrix for the evaluation
@@ -114,15 +100,17 @@
             And so on ...
         """
     ```
+
     and the method to check if the row is good enough or not:
-    ```
+    
+    ```python
     def check_row(r, reverse) -> bool:
         ...
     ```
   + You can see more in the source code
 
 + Finally is the code for evaluation idea:
-    ```
+    ```python
     def _evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
         if is_movement:
             if (
@@ -142,3 +130,33 @@
         return cnt
     ```
 + Also, we avoid the moving up as the structure of the board may be broken
+
+### Get everything together:
++ After implementing all the strategies, we associate them in one
+
+    ```python
+    def evaluate(self, grid: Grid, is_movement: bool) -> int:
+    """
+    Evaluate the score of the board
+
+    Parameters
+    ----------
+    grid: Grid
+
+    is_movement: bool
+
+    Returns
+    -------
+        evaluation: int
+            return the evaluation value
+    """
+    if grid.has_no_move():
+        return self.GAME_OVER
+    
+    total = 0
+    total += 2 * self._evaluate_tiles_order(grid, is_movement)
+    total += 1 * self._evaluate_average(grid.board)
+    total += 40 * self._evaluate_potential_merge(grid.board)
+    total += 30 * self._evaluate_empty_tile(grid.board)
+    return total
+    ```

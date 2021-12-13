@@ -43,7 +43,6 @@ class Evaluation:
     def __init__(self) -> None:
         self.ROW            = 4
         self.COLUMN         = 4
-        self.num_eval       = 1
 
     def evaluate(self, grid: Grid, is_movement: bool) -> int:
         """
@@ -64,14 +63,13 @@ class Evaluation:
             return self.GAME_OVER
         
         total = 0
-        total += 2 * self._evaluate_tiles_order(grid, is_movement)
-        total += 1 * self._evaluate_average(grid.board)
-        total += 40 * self._evaluate_potential_merge(grid.board)
-        total += 30 * self._evaluate_empty_tile(grid.board)
-        # total += self._evaluate_biggest_tile(grid.board)
+        total += 2 * self.__evaluate_tiles_order(grid, is_movement)
+        total += 1 * self.__evaluate_average(grid.board)
+        total += 40 * self.__evaluate_potential_merge(grid.board)
+        total += 30 * self.__evaluate_empty_tile(grid.board)
         return total
         
-    def _evaluate_average(self, board: list) -> int:
+    def __evaluate_average(self, board: list) -> int:
         s, cnt          = 0, 0
         for row in board:
             for x in row:
@@ -80,7 +78,7 @@ class Evaluation:
         
         return s // cnt
     
-    def _evaluate_empty_tile(self, board: list) -> int:
+    def __evaluate_empty_tile(self, board: list) -> int:
         cnt             = 0
         for row in board:
             for x in row:
@@ -88,7 +86,7 @@ class Evaluation:
         
         return cnt
 
-    def _evaluate_potential_merge(self, board: list) -> int:
+    def __evaluate_potential_merge(self, board: list) -> int:
         used_in_R       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
         used_in_C       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
         cnt             = 0
@@ -110,15 +108,15 @@ class Evaluation:
 
         return cnt
 
-    def choose_weight_index(self, board: list, is_strict: bool) -> int:
+    def __choose_weight_index(self, board: list, is_strict: bool) -> int:
         """
-        Choose the suitable weight matrix for the evaluation
-        This bases on the playing strategy of the AI
-            It check from the last row to the first one
-            If the last row is not good, use 0
-            If the last row is good enough, use 1
-            If the last row and the second last row is good enough, use 2
-            And so on ...
+        + Choose the suitable weight matrix for the evaluation
+        + This bases on the playing strategy of the AI
+            - It check from the last row to the first one
+            - If the last row is not good, use 0
+            - If the last row is good enough, use 1
+            - If the last row and the second last row is good enough, use 2
+            - And so on ...
         """
         # store to a new array
         values = list()
@@ -159,7 +157,7 @@ class Evaluation:
 
         return idx
     
-    def _evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
+    def __evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
         if is_movement:
             if (
                 grid.can_move_left() is False
@@ -169,7 +167,10 @@ class Evaluation:
                 return self.GAME_OVER
         
         cnt = 0
-        idx = self.choose_weight_index(grid.board, False)
+        idx = self.__choose_weight_index(grid.board, False)
+        # => có phần strict và non-strict, cả hai đều có kết quả tốt
+        # để non-strict chữa lỗi tốt hơn
+        # còn để strict nếu ko có lỗi khi chơi sẽ cho kết quả tốt hơn
         # idx = 3
         
         for r in range(self.ROW):
@@ -177,17 +178,6 @@ class Evaluation:
                 cnt += grid.board[r][c] * self.WEIGHTS_MATRIX[idx][r][c]
 
         return cnt
-
-    def _evaluate_biggest_tile(self, board: list) -> int:
-        mx = 0
-        for row in board:
-            for x in row:
-                mx = max(mx, x)
-        
-        if board[3][0] == mx:
-            return mx * self.WEIGHTS_MATRIX[0][3][0]
-        return self.GAME_OVER
-
     
     # WEIGHTS_MATRIX       = [
     #     [
