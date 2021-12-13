@@ -44,7 +44,7 @@
 + Button:
   + In button, you should concern about its `callback` attribute. The callback must be the function pointer with no argument.
   + For example:
-    ```
+    ```python
     def btn_callback():
         ...
     
@@ -53,7 +53,7 @@
     ```
   + `callback` will be activated when mouse button CLICK, not PRESS or RELEASE
   + you can use `chain settings` like this:
-    ```
+    ```python
     Button("Human", font_size, 180, 34, 175, 40, form_mode).set_state(Button.TOGGLE).callback = lambda: self.gameplay.set_play_mode(self.gameplay.MODE_HUMAN)
     ```
   + if you want to change button's color, you should redraw() it 
