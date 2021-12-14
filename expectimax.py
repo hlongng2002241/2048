@@ -15,10 +15,6 @@ class Expectimax(Algorithm):
                 the current grid
             depth: int
                 current depth
-            alpha: int
-                alpha value used for pruning
-            beta: int
-                beta value used for pruning
 
         Returns
         -------
@@ -53,10 +49,6 @@ class Expectimax(Algorithm):
                 the current grid
             depth: int
                 current depth
-            alpha: int
-                alpha value used for pruning
-            beta: int
-                beta value used for pruning
 
         Returns
         -------
