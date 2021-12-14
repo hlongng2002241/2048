@@ -1,56 +1,94 @@
 from .algorithm import Algorithm
 from game.grid import Grid
 
-
 class Expectimax(Algorithm):
 
     def __init__(self, max_depth: int) -> None:
         super().__init__(max_depth)
 
-    def max_player(self, grid: Grid, depth: int):
+    def max_move(self, grid: Grid, depth: int) -> tuple[int, int]:
+        """
+        Visual and calculate next move for max player (move the board)
+        Parameters
+        ----------
+            grid: Grid
+                the current grid
+            depth: int
+                current depth
+            alpha: int
+                alpha value used for pruning
+            beta: int
+                beta value used for pruning
+
+        Returns
+        -------
+            tuple of best_move and best_score
+        """
         current_score = self.eval.evaluate(grid, True)
 
-        if depth == self.max_depth or grid.is_terminal("max"):
-            return current_score
+        if depth > self.max_depth or grid.is_terminal('max'):
+            return -1, current_score
 
-        moves = grid.get_children('max')
-        max_score = - self.eval.INFINITY
-        best_move = moves[0]
+        moves = [1, 2, 3]
+        best_move, max_score = -1, -self.eval.INFINITY
 
         for move in moves:
-            state = Grid(None)
-            Grid.copy(grid.board, state.board)
-            state.move(move)
-            temp_score = max_score
-            max_score = max(max_score, self.chance_player(state, depth + 1))
-            if max_score > temp_score and depth == 1:
-                best_move = move
-        if depth == 1:
-            return (best_move, max_score)
-        return max_score
+            save_board = list()
+            if grid.can_move(move):
+                grid.copy(grid.board, save_board)
+                grid.move(move)
+                _, score = self.expect_move(grid, depth + 1)
+                grid.copy(save_board, grid.board)
+                if score > max_score:
+                    best_move, max_score = move, score
 
-    def chance_player(self, grid: Grid, depth: int):
+        return best_move, max_score
+
+    def expect_move(self, grid: Grid, depth: int) -> tuple[int, int]:
+        """
+        Visual and calculate next move for expect player (random new tile)
+        Parameters
+        ----------
+            grid: Grid
+                the current grid
+            depth: int
+                current depth
+            alpha: int
+                alpha value used for pruning
+            beta: int
+                beta value used for pruning
+
+        Returns
+        -------
+            tuple of best_move and best_score
+        """
         current_score = self.eval.evaluate(grid, False)
 
-        if depth == self.max_depth or grid.is_terminal("min"):
-            return current_score
+        if depth > self.max_depth or grid.is_terminal('min'):
+            return -1, current_score
 
-        RATE = grid.RANDOM_4_RATE
-        moves = grid.get_children("min")
-        min_score = self.eval.INFINITY
+        ROW, COLUMN = grid.ROW, grid.COLUMN
+        RATE        = grid.RANDOM_4_RATE
+        min_score   = self.eval.INFINITY
 
-        for move in moves:
-            state_2, state_4 = Grid(None), Grid(None)
-            Grid.copy(grid.board, state_2.board)
-            Grid.copy(grid.board, state_4.board)
-            state_2.place_tile(move[0], move[1], 2)
-            state_4.place_tile(move[0], move[1], 4)
-            min_score = min(min_score, RATE * self.max_player(state_2, depth + 1) + (1 - RATE) * self.max_player(state_4, depth + 1))
+        for r in range(ROW):
+            for c in range(COLUMN):
+                if grid.board[r][c] == 0:
+                    grid.board[r][c] = 2
+                    _, score_2 = self.max_move(grid, depth + 1)
+                    grid.board[r][c] = 4
+                    _, score_4 = self.max_move(grid, depth + 1)
+                    grid.board[r][c] = 0
+                    min_score = min(min_score, score_2 * (1.0 - RATE) + score_4 * RATE)
 
-        if depth == 1:
-            return min_score
-        return min_score
+        return -1, min_score
         # there is no need to find best move for min!!!
 
     def best_move(self, grid: Grid):
-        grid.move(self.max_player(grid, 1)[0], True)
+        move_direction, _ = self.max_move(grid, 1)
+
+        if move_direction != -1:
+            grid.move(move_direction, True)
+        else:
+            if grid.can_move_up():
+                grid.move_up(True)
