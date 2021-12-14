@@ -62,7 +62,7 @@ class Menu:
     def _set_replay_mode(self, on: bool):
         if self.gameplay.is_replayed == on:
             return
-        self.gameplay.is_replayed     = on
+        self.gameplay.is_replayed   = on
         self.gameplay.state.switch()
 
     def _button_new_game(self):
