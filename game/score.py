@@ -5,14 +5,14 @@ from src.utility import SharedFont
 
 class Score:
     BACKGROUND_COLOR            = (255, 255, 255)
-    BOX_COLOR                   = (185, 173, 161)
+    BOX_COLOR                   = (164, 218, 246)
     SCORE_COLOR                 = (255, 255, 255)
-    TITLE_COLOR                 = (236, 228, 219)
+    TITLE_COLOR                 = (12, 55, 66)
 
     TITLE_SIZE                  = 16
     SCORE_SIZE                  = 24
 
-    TILE_WIDTH                  = 80
+    TILE_WIDTH                  = 90
     TILE_HEIGHT                 = 50
     BOX_SPACE                   = 5
 
@@ -79,6 +79,9 @@ class Score:
         x, y                    = self.position
 
         screen.blit(self.bg, (x, y, w, h))
+
+    def current_score(self) -> int:
+        return self._current_score
 
 
 
