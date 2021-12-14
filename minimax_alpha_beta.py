@@ -1,13 +1,12 @@
 from game.grid import Grid
 from .algorithm import Algorithm
-from typing import Tuple
 
 class MinimaxAlphaBeta(Algorithm):
 
     def __init__(self, max_depth) -> None:
         super().__init__(max_depth)
 
-    def max_move(self, grid: Grid, alpha: int, beta: int, depth: int) -> Tuple[int, int]:
+    def max_move(self, grid: Grid, alpha: int, beta: int, depth: int) -> tuple[int, int]:
         """
         Visual and calculate next move for max player (move the board)
         Parameters
@@ -45,7 +44,7 @@ class MinimaxAlphaBeta(Algorithm):
 
         return best_move, max_score
 
-    def min_move(self, grid: Grid, alpha: int, beta: int, depth: int):
+    def min_move(self, grid: Grid, alpha: int, beta: int, depth: int) -> tuple[int, int]:
         """
         Visual and calculate next move for expect player (random new tile)
         Parameters
