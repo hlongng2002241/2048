@@ -71,38 +71,6 @@ class Grid:
         self.random_new_tile()
         self.redraw()
 
-    def has_no_move(self, board: list=None) -> bool:
-        """
-        I recommend to use is_terminal instead as this function will be removed soon
-        
-        Parameter
-        --------
-            board: list, default = None
-                if board is None grid's board is used
-        
-        Return
-        ------
-            bool: 
-        """
-        if board is None:
-            board = self.board
-
-        # check if there is any empty tile
-        for row in board:
-            for x in row:
-                if x == 0:
-                    return False
-
-        # check if there is any adjacent tiles which have the same value
-        for r in range(Grid.ROW):
-            for c in range(Grid.COLUMN):
-                if 0 <= r + 1 < Grid.ROW and board[r][c] == board[r + 1][c]:
-                    return False
-                if 0 <= c + 1 < Grid.COLUMN and board[r][c] == board[r][c + 1]:
-                    return False
-        
-        return True
-
     def random_new_tile(self):
         """
         Random new tile in self.board
@@ -347,6 +315,9 @@ class Grid:
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
         # Loop over all columns
         for j in range(COLUMN):
@@ -365,7 +336,7 @@ class Grid:
                 elif self.board[i][j] == k:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w += 1
                     k = 0
                 # if 2 tiles don't match, write the first tile at location w
@@ -391,6 +362,9 @@ class Grid:
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for j in range(COLUMN):
@@ -403,7 +377,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w -= 1
                     k = 0
                 else:
@@ -425,6 +399,9 @@ class Grid:
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for i in range(ROW):
@@ -437,7 +414,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w += 1
                     k = 0
                 else:
@@ -459,6 +436,9 @@ class Grid:
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+            
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for i in range(ROW):
@@ -471,7 +451,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w -= 1
                     k = 0
                 else:

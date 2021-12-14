@@ -59,7 +59,7 @@ class Evaluation:
             evaluation: int
                 return the evaluation value
         """
-        if grid.has_no_move():
+        if grid.is_terminal("max"):
             return self.GAME_OVER
         
         total = 0
