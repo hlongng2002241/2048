@@ -1,20 +1,15 @@
-from . algorithm import Algorithm
 from game.grid import Grid
-
+from .algorithm import Algorithm
+from typing import Tuple
 
 class MinimaxAlphaBeta(Algorithm):
+
     def __init__(self, max_depth) -> None:
-        super().__init__(max_depth=max_depth)
+        super().__init__(max_depth)
 
-        self.__use_invert_sum   = False
-        # self.__weights          = [0, 256, 128, 64, 32, 16, 8, 4, 2, 1]
-        self.__weights          = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256]
-        # self.__weights          = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
-    def max_move(self, grid: Grid, depth: int, alpha: int, beta: int) -> tuple[int, int]:
+    def max_move(self, grid: Grid, alpha: int, beta: int, depth: int) -> Tuple[int, int]:
         """
         Visual and calculate next move for max player (move the board)
-
         Parameters
         ----------
             grid: Grid
@@ -23,52 +18,41 @@ class MinimaxAlphaBeta(Algorithm):
                 current depth
             alpha: int
                 alpha value used for pruning
-            beta: int 
+            beta: int
                 beta value used for pruning
-        
+
         Returns
         -------
             tuple of best_move and best_score
         """
-        current_score           = self.eval.evaluate(grid, True)
-        
-        if depth >= self.max_depth:
-            if self.__use_invert_sum:
-                return -1, current_score * self.__weights[depth]
+        current_score = self.eval.evaluate(grid, True)
+
+        if depth > self.max_depth or grid.is_terminal('max'):
             return -1, current_score
 
-        if current_score == self.eval.GAME_OVER:
-            return -1, current_score * (self.max_depth - depth + 1) 
+        moves = [1, 2, 3]
+        best_move, max_score = -1, -self.eval.INFINITY
 
-        dirs                    = [1, 2, 3]
-        best_move               = -1
-        best_score              = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
-
-        for direct in dirs:
-            save_board          = list()
-            if grid.can_move(direct):
+        for move in moves:
+            save_board = list()
+            if grid.can_move(move):
                 grid.copy(grid.board, save_board)
-                grid.move(direct)
-                _, score        = self.min_move(grid, depth + 1, alpha, beta)
+                grid.move(move)
+                _, score = self.min_move(grid, alpha, beta, depth + 1)
                 grid.copy(save_board, grid.board)
 
-                score          += current_score * int(self.__use_invert_sum) * self.__weights[depth]
-                
-                if best_score < score:
-                    best_score  = score
-                    best_move   = direct
+                if score > max_score:
+                    best_move, max_score = move, score
+                if alpha < max_score:
+                    alpha = max_score
+                if alpha >= beta:
+                    return best_move, max_score
 
-                if alpha < best_score:
-                    alpha       = best_score
-                if beta <= alpha:
-                    return best_move, best_score
+        return best_move, max_score
 
-        return best_move, best_score
-
-    def min_move(self, grid: Grid, depth: int, alpha: int, beta: int) -> tuple[int, int]:
+    def min_move(self, grid: Grid, alpha: int, beta: int, depth: int):
         """
-        Visual and calculate next move for min player (random new tile)
-
+        Visual and calculate next move for expect player (random new tile)
         Parameters
         ----------
             grid: Grid
@@ -77,57 +61,48 @@ class MinimaxAlphaBeta(Algorithm):
                 current depth
             alpha: int
                 alpha value used for pruning
-            beta: int 
+            beta: int
                 beta value used for pruning
-        
+
         Returns
         -------
             tuple of best_move and best_score
         """
-        current_score       = self.eval.evaluate(grid, False)
+        current_score = self.eval.evaluate(grid, False)
 
-        if depth >= self.max_depth:
-            if self.__use_invert_sum:
-                return -1, current_score * self.__weights[depth]
+        if depth > self.max_depth or grid.is_terminal('min'):
             return -1, current_score
-        
-        if current_score == self.eval.GAME_OVER:
-            return -1, current_score * (self.max_depth - depth + 1)
 
-        ROW, COLUMN         = grid.ROW, grid.COLUMN
-        RATE                = grid.RANDOM_4_RATE
-
-        best_score          = self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
+        ROW, COLUMN = grid.ROW, grid.COLUMN
+        RATE        = grid.RANDOM_4_RATE
+        min_score   = self.eval.INFINITY
 
         for r in range(ROW):
             for c in range(COLUMN):
                 if grid.board[r][c] == 0:
-                    grid.board[r][c]    = 2
-                    _, score_2          = self.max_move(grid, depth + 1, alpha, beta)
-                    grid.board[r][c]    = 4
-                    _, score_4          = self.max_move(grid, depth + 1, alpha, beta)
-                    grid.board[r][c]    = 0
+                    grid.board[r][c] = 2
+                    _, score_2 = self.max_move(grid, alpha, beta, depth + 1)
+                    grid.board[r][c] = 4
+                    _, score_4 = self.max_move(grid, alpha, beta, depth + 1)
+                    grid.board[r][c] = 0
+                    score = min(score_2, score_4)
+                    min_score = min(min_score, score)
 
-                    score               = score_2 * (1.0 - RATE) + score_4 * RATE
-                    score              += current_score * int(self.__use_invert_sum) * self.__weights[depth]
+                    if score < min_score:
+                        min_score = score
+                    if beta > min_score:
+                        beta = min_score
+                    if alpha >= beta:
+                        return -1, min_score
 
-                    if best_score > score:
-                        best_score      = score
-
-                    if beta > best_score:
-                        beta            = best_score
-                    if beta <= alpha:
-                        return -1, best_score
-                    
-        return -1, best_score
+        return -1, min_score
+        # there is no need to find best move for min!!!
 
     def best_move(self, grid: Grid):
-        alpha               = -self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
-        beta                = self.eval.INFINITY * (self.max_depth if self.__use_invert_sum else 1)
-        move_idx, _         = self.max_move(grid, 0, alpha, beta)
-        
-        if move_idx        != -1:
-            grid.move(move_idx, True)
+        move_direction, _ = self.max_move(grid, -self.eval.INFINITY, self.eval.INFINITY, 1)
+
+        if move_direction != -1:
+            grid.move(move_direction, True)
         else:
             if grid.can_move_up():
-                grid.move_up()
+                grid.move_up(True)
