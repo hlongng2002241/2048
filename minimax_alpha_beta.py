@@ -87,5 +87,10 @@ class MinimaxAlphaBeta(Algorithm):
         # there is no need to find best move for min!!!
 
     def best_move(self, grid: Grid):
-        best_move, max_score = self.max_move(grid, - self.eval.INFINITY, self.eval.INFINITY, 1)
-        grid.move(best_move, True)
+        move_direction, _ = self.max_move(grid, -self.eval.INFINITY, self.eval.INFINITY, 1)
+
+        if move_direction != -1:
+            grid.move(move_direction, True)
+        else:
+            if grid.can_move_up():
+                grid.move_up(True)
