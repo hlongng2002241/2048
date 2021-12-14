@@ -88,8 +88,6 @@ class MinimaxAlphaBeta(Algorithm):
                     score = min(score_2, score_4)
                     min_score = min(min_score, score)
 
-                    if score < min_score:
-                        min_score = score
                     if beta > min_score:
                         beta = min_score
                     if alpha >= beta:
