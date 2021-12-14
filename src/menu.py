@@ -56,7 +56,7 @@ class Menu:
         # Button("On", font_size, 85, 0, 50, 40, form_replay).callback            = lambda: self._set_replay_mode(True)
         # Button("Off", font_size, 140, 0, 50, 40, form_replay).set_state(Button.TOGGLE).callback = lambda: self._set_replay_mode(False)
         
-        self.new_game               = Button("New Game", 22, -180, 80, 150, 50, self)
+        self.new_game               = Button("New Game", 22, -400, 80, 150, 50, self)
         self.new_game.callback      = lambda: self._button_new_game()
 
     def _set_replay_mode(self, on: bool):
