@@ -1,5 +1,6 @@
 from .algorithm import Algorithm
 from game.grid import Grid
+#from typing import Tuple
 
 class Expectimax(Algorithm):
 
@@ -33,10 +34,12 @@ class Expectimax(Algorithm):
             if grid.can_move(move):
                 grid.copy(grid.board, save_board)
                 grid.move(move)
-                _, score = self.expect_move(grid, depth + 1)
+                pre_score = max_score
+                max_score = max(max_score, self.expect_move(grid, depth + 1)[1])
                 grid.copy(save_board, grid.board)
-                if score > max_score:
-                    best_move, max_score = move, score
+
+                if max_score > pre_score and depth == 1:
+                    best_move = move
 
         return best_move, max_score
 
@@ -81,6 +84,6 @@ class Expectimax(Algorithm):
 
         if move_direction != -1:
             grid.move(move_direction, True)
-        else:
-            if grid.can_move_up():
-                grid.move_up(True)
+        #else:
+            #if grid.can_move_up():
+                #grid.move_up(True)
