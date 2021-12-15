@@ -20,6 +20,7 @@ class GridSettings:
         1024                : (4, 80, 111),
         2048                : (3, 55, 66),
         4096                : (3, 55, 66),
+        8192                : (3, 55, 66),
     }
 
     COLOR                   = {
@@ -35,12 +36,13 @@ class GridSettings:
         1024                : (255,255, 255),
         2048                : (255,255, 255),
         4096                : (255,255, 255),
+        8192                : (255,255, 255),
     }
 
     BORDER_COLOR            = (164, 218, 246)
 
     BORDER_SIZE             = 10
-    BORDER_RADIUS           = 8
+    BORDER_RADIUS           = 5
     TILE_SIZE               = 80
 
 
@@ -50,7 +52,7 @@ class Grid:
     RANDOM_4_RATE           = 0.05
     RAMDOM_RANGE            = 1000
 
-    def __init__(self, score: Score):
+    def __init__(self, score: Score = None):
         self.score          = score
 
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
@@ -68,38 +70,6 @@ class Grid:
         self.random_new_tile()
         self.random_new_tile()
         self.redraw()
-
-    def has_no_move(self, board: list=None) -> bool:
-        """
-        I recommend to use is_terminal instead as this function will be removed soon
-        
-        Parameter
-        --------
-            board: list, default = None
-                if board is None grid's board is used
-        
-        Return
-        ------
-            bool: 
-        """
-        if board is None:
-            board = self.board
-
-        # check if there is any empty tile
-        for row in board:
-            for x in row:
-                if x == 0:
-                    return False
-
-        # check if there is any adjacent tiles which have the same value
-        for r in range(Grid.ROW):
-            for c in range(Grid.COLUMN):
-                if 0 <= r + 1 < Grid.ROW and board[r][c] == board[r + 1][c]:
-                    return False
-                if 0 <= c + 1 < Grid.COLUMN and board[r][c] == board[r][c + 1]:
-                    return False
-        
-        return True
 
     def random_new_tile(self):
         """
@@ -186,7 +156,6 @@ class Grid:
     def copy(src: list, des: list):
         """
         This function is used to copy the board's values
-
         Parameters
         ----------
             src: list
@@ -310,79 +279,42 @@ class Grid:
                         return True
         return False
 
-    def get_available_moves_for_max(self) -> list[int]:
+    def can_move(self, direction) -> bool:
         """
         Indices for movements:
             Up = 0, Down = 1, Left = 2, Right = 3
-
         Returns
         -------
-            list: list
-                list of indices of movements
+            can_move: bool
         """
-        available_moves = []
+        if direction == 0:
+            return self.can_move_up()
+        if direction == 1:
+            return self.can_move_down()
+        if direction == 2:
+            return self.can_move_left()
+        if direction == 3:
+            return self.can_move_right()
 
-        if self.can_move_up():
-            available_moves.append(0)
-        if self.can_move_down():
-            available_moves.append(1)
-        if self.can_move_left():
-            available_moves.append(2)
-        if self.can_move_right():
-            available_moves.append(3)
-
-        return available_moves
-
-    def get_available_moves_for_min(self) -> list[tuple[int, int, int]]:
-        """
-        In some case, min can be understood as expect
-        """
-        empty_squares = []
-        for i in range(self.ROW):
-            for j in range(self.COLUMN):
+    def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
+        places = []
+        for i in range(4):
+            for j in range(4):
                 if self.board[i][j] == 0:
-                    if random.random() > 0.9:
-                        empty_squares.append((i, j, 4))
-                    else:
-                        empty_squares.append((i, j, 2))
-        return empty_squares
-
-    def get_num_empty_tiles(self) -> int:
-        return len(self.get_available_moves_for_min())
-
-    def place_tile(self, row: int, column: int, tile: int) -> None:
-        """
-        Set value for tile at row 'row' and column 'column'
-        """
-        self.board[row][column] = tile
-
-    def get_children(self, who: str) -> list:
-        """
-        Get next grid states
-
-        Parameters
-        ----------
-            who: str
-                who can be "max", "min" or "expect"
-
-        Returns
-        -------
-            list of next available moves (or grid states)
-        """
-        if who == "max":
-            return self.get_available_moves_for_max()
-        elif who == "min" or who == "expect":
-            return self.get_available_moves_for_min()
+                    places.append((i, j))
+        return places
 
     def move_up(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards up border
-
         Parameters
         ----------
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
         # Loop over all columns
         for j in range(COLUMN):
@@ -401,7 +333,7 @@ class Grid:
                 elif self.board[i][j] == k:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w += 1
                     k = 0
                 # if 2 tiles don't match, write the first tile at location w
@@ -421,12 +353,14 @@ class Grid:
     def move_down(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards down border
-
         Parameters
         ----------
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for j in range(COLUMN):
@@ -439,7 +373,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w -= 1
                     k = 0
                 else:
@@ -455,12 +389,14 @@ class Grid:
     def move_left(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards left border
-
         Parameters
         ----------
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for i in range(ROW):
@@ -473,7 +409,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w += 1
                     k = 0
                 else:
@@ -489,12 +425,14 @@ class Grid:
     def move_right(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards right border
-
         Parameters
         ----------
             calculate_score: bool, default = False
                 decide if this movement is scored or not
         """
+        if calculate_score:
+            self.score.inc_num_move()
+            
         ROW, COLUMN = self.ROW, self.COLUMN
 
         for i in range(ROW):
@@ -507,7 +445,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add(2 * k)
+                        self.score.add_to_score(2 * k)
                     w -= 1
                     k = 0
                 else:
@@ -520,48 +458,23 @@ class Grid:
             for j in range(w + 1):
                 self.board[i][j] = 0
 
-    def move(self, direction: int) -> None:
+    def move(self, direction: int, calculate_score=False) -> None:
         """
         Indices for directions:
             Up = 0, Down = 1, Left = 2, Right = 3
+        Parameters
+        ----------
+        direction: int
+        calculate_score: bool
         """
         if direction == 0:
-            self.move_up()
+            self.move_up(calculate_score)
         elif direction == 1:
-            self.move_down()
+            self.move_down(calculate_score)
         elif direction == 2:
-            self.move_left()
+            self.move_left(calculate_score)
         else:
-            self.move_right()
-
-    def get_move_to(self, child: "Grid") -> int:
-        """
-        Parameters
-        ---------
-            child: Grid
-                the child state that the current state tend to be
-        
-        Returns
-        -------
-            direction: int
-                the right action to get the state of child
-        """
-        if self.can_move_up():
-            state = Grid()
-            state.move_up()
-            if state == child:
-                return 0
-        if self.can_move_down():
-            state = Grid()
-            state.move_down()
-            if state == child:
-                return 1
-        if self.can_move_left():
-            state = Grid()
-            state.move_left()
-            if state == child:
-                return 2
-        return 3
+            self.move_right(calculate_score)
 
     def is_terminal(self, who: str) -> bool:
         """
@@ -571,7 +484,6 @@ class Grid:
         ----------
             who: str
                 who can be "max", "min" or "expect"
-
         Returns
         -------
             is_terminal: bool
