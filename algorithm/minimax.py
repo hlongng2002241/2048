@@ -52,7 +52,7 @@ class Minimax(Algorithm):
                     score_2 =  self.max_player(grid, depth + 1)[1]
                     grid.board[r][c] = 0
                     # min_score = min(min_score, score_2*(1 - RATE)+score_4* RATE)  
-                    min_score = min (score_2, score_4, min_score, score_2 * (1-RATE) + score_4 * RATE)                  
+                    min_score = min(min_score, score_2 * (1-RATE) + score_4 * RATE)                  
         return -1, min_score
 
     

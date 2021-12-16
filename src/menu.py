@@ -29,7 +29,7 @@ class Menu:
         Button("Minimax", font_size, 0, 32, 175, 70, form_algo).callback            = lambda: self.gameplay.set_algorithm(Minimax(self.depth))
         Button("Minimax AB", font_size, 180, 32, 175, 70, form_algo).set_state(Button.TOGGLE).callback = lambda: self.gameplay.set_algorithm(MinimaxAlphaBeta(self.depth))
         Button("Expectmax", font_size, 0, 107, 175, 70, form_algo).callback         = lambda: self.gameplay.set_algorithm(Expectmax(self.depth))
-        Button("MixExpectMax", font_size, 180, 107, 175, 70, form_algo).callback    = lambda: self.gameplay.set_algorithm(MixedExpectmaxMinimax(self.depth))
+        Button("Mixexpectmax", font_size, 180, 107, 175, 70, form_algo).callback    = lambda: self.gameplay.set_algorithm(MixedExpectmaxMinimax(self.depth))
 
 
         form_move                   = Form(self.menu)
