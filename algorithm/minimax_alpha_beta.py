@@ -73,3 +73,5 @@ class MinimaxAlphaBeta(Algorithm):
 
         if move_dir != -1:
             grid.move(move_dir, True)
+        else:
+            grid.move_up(True)
