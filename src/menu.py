@@ -3,7 +3,7 @@ from ui.button import Button
 from ui.form import Form
 from ui.label import Label
 from . gameplay import GamePlay
-from algorithm.expectmax import Expectmax
+from algorithm.mixed_expectmax import Mixed_Expectmax_Minimax
 # from algorithm.minimax import Minimax
 from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
 
@@ -27,7 +27,7 @@ class Menu:
         Label("Algorithm:", font_size, 10, -4, form_algo)
         Button("Minimax", font_size, 0, 32, 355, 40, form_algo).callback        = lambda: self.gameplay.set_algorithm(Minimax(self.depth))
         Button("Minimax + Alpha Beta prune", font_size, 0, 77, 355, 40, form_algo).set_state(Button.TOGGLE).callback = lambda: self.gameplay.set_algorithm(MinimaxAlphaBeta(self.depth))
-        Button("Expectmax", font_size, 0, 122, 355, 40, form_algo).callback     = lambda: self.gameplay.set_algorithm(Expectmax(self.depth))
+        Button("Expectmax", font_size, 0, 122, 355, 40, form_algo).callback     = lambda: self.gameplay.set_algorithm(Mixed_Expectmax_Minimax(self.depth))
 
         form_move                   = Form(self.menu)
         form_move.position          = (0, 290)

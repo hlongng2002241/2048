@@ -97,6 +97,8 @@ class GamePlay:
                     self.current_time -= TIME_PER_MOVE
 
                     if self.is_loaded is False:
+                        # move_to_make = self.algorithm.best_move(self.grid)
+                        # self.grid.move(move_to_make)
                         self.algorithm.best_move(self.grid)
                         self.grid.random_new_tile()
                         self.grid.redraw()

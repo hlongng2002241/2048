@@ -1,8 +1,11 @@
+#fix the get to move func
+
 from pygame import Surface
 import pygame.draw as pygame_draw
 from src.utility import SharedFont
 import random
 from . score import Score
+from copy import deepcopy
 
 
 class GridSettings:
@@ -44,15 +47,15 @@ class GridSettings:
     TILE_SIZE               = 80
 
 
+
 class Grid:
     ROW                     = 4
     COLUMN                  = 4
-    RANDOM_4_RATE           = 0.05
+    RANDOM_4_RATE           = 0.10
     RAMDOM_RANGE            = 1000
 
     def __init__(self, score: Score):
         self.score          = score
-
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
         self.settings       = GridSettings()
 
@@ -186,7 +189,6 @@ class Grid:
     def copy(src: list, des: list):
         """
         This function is used to copy the board's values
-
         Parameters
         ----------
             src: list
@@ -364,6 +366,14 @@ class Grid:
                     else:
                         empty_squares.append((i, j, 2))
         return empty_squares
+
+    def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
+        places = []
+        for i in range(4):
+            for j in range(4):
+                if self.board[i][j] == 0:
+                    places.append((i, j))
+        return places
 
     def get_num_empty_tiles(self) -> int:
         return len(self.get_available_moves_for_min())
@@ -571,19 +581,22 @@ class Grid:
                 the right action to get the state of child
         """
         if self.can_move_up():
-            state = Grid()
-            state.move_up()
-            if state == child:
+            g = Grid(None)
+            g.board = deepcopy(self.board)
+            g.move_up()
+            if g == child:
                 return 0
         if self.can_move_down():
-            state = Grid()
-            state.move_down()
-            if state == child:
+            g = Grid(None)
+            g.board = deepcopy(self.board)
+            g.move_down()
+            if g == child:
                 return 1
         if self.can_move_left():
-            state = Grid()
-            state.move_left()
-            if state == child:
+            g = Grid(None)
+            g.board = deepcopy(self.board)
+            g.move_left()
+            if g == child:
                 return 2
         return 3
 
