@@ -66,7 +66,7 @@ class MinimaxAlphaBeta(Algorithm):
                         return -1, min_score
 
         return -1, min_score
-        # there is no need to find best move for min!!!
+
 
     def best_move(self, grid: Grid):
         move_dir, _ = self.max_move(grid, -self.eval.INFINITY, self.eval.INFINITY, 1)
