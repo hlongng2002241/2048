@@ -1,6 +1,5 @@
 from . algorithm import Algorithm
 from game.grid import Grid
-from typing import Tuple
 
 PO_INF = float("inf")
 NE_INF = float("-inf")
@@ -9,7 +8,7 @@ class Mixed_Expectmax_Minimax(Algorithm):
     def __init__(self, depth : int = 5) -> None:
         super().__init__(depth)
 
-    def max_move(self, grid: Grid, a: int, b: int, d: int) -> Tuple[int, int]:
+    def max_move(self, grid: Grid, a: int, b: int, d: int) -> tuple[int, int]:
         if d == 0 or grid.is_terminal(who="max"):
             return (None, self.eval.evaluate(grid, True))
         
@@ -36,7 +35,7 @@ class Mixed_Expectmax_Minimax(Algorithm):
                     break
         return (best_move, best_score)
     
-    def min_move(self, grid: Grid, a: int, b: int, d: int) -> Tuple[int, int]:
+    def min_move(self, grid: Grid, a: int, b: int, d: int) -> tuple[int, int]:
         if d == 0 or grid.is_terminal(who="min"):
             return (None, self.eval.evaluate(grid, True))
 
@@ -67,6 +66,6 @@ class Mixed_Expectmax_Minimax(Algorithm):
                     
         return (-1, best_score)
 
-    def best_move(self, grid: Grid, depth: int = 5) -> int:
-        (move_idx, _) = self.max_move(grid, NE_INF, PO_INF, depth)
+    def best_move(self, grid: Grid) -> int:
+        (move_idx, _) = self.max_move(grid, NE_INF, PO_INF, self.max_depth)
         grid.move(move_idx, True)

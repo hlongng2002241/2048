@@ -43,6 +43,9 @@ class Application:
         
     def update(self, dt):
         self.gameplay.update(dt)
+
+        if self.gameplay.is_statistics and self.gameplay.n_statistics <= self.gameplay.idx_statistics:
+            self.running = False
     
     def draw(self):
         # self.screen.fill((0, 0, 0))

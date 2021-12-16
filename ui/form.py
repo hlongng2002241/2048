@@ -9,9 +9,9 @@ class Form(UiElement):
     def name(self) -> str:
         return "Form"
 
-    def deselect_all_buttons(self):
+    def deselect_all_buttons(self, except_btn: Button = None):
         for child in self.children:
-            if isinstance(child, Button):
+            if isinstance(child, Button) and child is not except_btn:
                 child.set_state(child.NORMAL)
     
     def process_input(self, event: Event):

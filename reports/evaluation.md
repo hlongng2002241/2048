@@ -111,7 +111,7 @@
 
 + Finally is the code for evaluation idea:
     ```python
-    def _evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
+    def __evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
         if is_movement:
             if (
                 grid.can_move_left() is False
@@ -121,7 +121,7 @@
                 return self.GAME_OVER
         
         cnt = 0
-        idx = self._choose_weight_index(grid.board)
+        idx = self.__choose_weight_index(grid.board, False)
         
         for r in range(self.ROW):
             for c in range(self.COLUMN):
