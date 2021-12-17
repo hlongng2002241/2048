@@ -55,8 +55,8 @@ class MinimaxAlphaBeta(Algorithm):
                     grid.board[r][c] = 4
                     _, score_4 = self.max_move(grid, alpha, beta, depth + 1)
                     grid.board[r][c] = 0
-                    score = min(score_2, score_4, score_2 *(1-RATE) + score_4*RATE)
-                    min_score = min(min_score, score,score_2, score_4, score_2 *(1-RATE) + score_4*RATE)
+                    score = min(score_2, score_4)
+                    min_score = min(min_score, score,score_2, score_4)
 
                     if score < min_score:
                         min_score = score
@@ -74,4 +74,5 @@ class MinimaxAlphaBeta(Algorithm):
         if move_dir != -1:
             grid.move(move_dir, True)
         else:
+            
             grid.move_up(True)
