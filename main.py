@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import pygame
 import pygame.time as pygame_time
 import pygame.display as pygame_display
@@ -102,3 +103,10 @@ class Application:
 
 app = Application()
 app.run()
+=======
+from src.application import Application
+
+app = Application()
+
+app.run()
+>>>>>>> main
