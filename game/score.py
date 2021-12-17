@@ -31,7 +31,7 @@ class Score:
         self.bg                 = Surface((self.TILE_WIDTH * 2 + self.BOX_SPACE, self.TILE_HEIGHT))
         self.bg2                = Surface((self.TILE_WIDTH, self.TILE_HEIGHT))
         self.position           = (0, 0)
-        self.bg2_position       = (95, 80)
+        self.bg2_position       = (0, 80)
 
         self._num_move          = 0
 
@@ -46,6 +46,7 @@ class Score:
     def add_to_score(self, value: int):
         """
         Add value to current score
+
         Parameters
         ----------
             value: int
@@ -102,6 +103,14 @@ class Score:
     @property
     def current_score(self) -> int:
         return self._current_score
+
+
+
+
+
+    
+
+
 
 
     

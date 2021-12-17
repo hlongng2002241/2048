@@ -4,8 +4,9 @@ from . utility import SharedFont
 from game.grid import Grid
 from game.score import Score
 from game.state import State
-# from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
 from algorithm.minimax import Minimax
+# from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
+
 
 class GamePlay:
     # Game Mode
@@ -20,32 +21,41 @@ class GamePlay:
         self.MOVES_PER_SECOND   = 10
 
         self.score              = Score()
-        self.score.position     = (235, 50)
+        self.score.position     = (215, 50)
         
         self.grid               = Grid(self.score)
         self.grid.position      = (30, 200)
 
-        font                    = SharedFont().get_font(72)
+        font                    = SharedFont().get_font(74)
         font.bold               = True
-        self.game_name          = font.render("2048", True, (3,55,66))
+        self.game_name          = font.render("2048", True, (12, 55, 66))
         self.game_name_pos      = (30, 21)
 
         # Declaration of algorithm, default: Minimax
         self.algorithm          = Minimax(4)  # change this None
 
         self.state              = State("log.txt")
-        self.is_loaded          = False
+        self.is_replayed        = False
         
-        if self.is_loaded is True:
+        if self.is_replayed is True:
             self.state.load_file()
             self.state.load_next(self.grid.board)
         else:
             self.state.save_file()
             self.state.save_next(self.grid.board)
 
+        # =================================================
+        # Statistics here
+        self.is_statistics      = True
+        self.n_statistics       = 100
+        self.idx_statistics     = 0
+        self.__file_statistics  = open("stat.out", "w")
+        # =================================================
+
+
     def new_game(self):
         self.grid.restart()
-        self.score.reset_current_score()
+        self.score.reset()
         self.current_time       = 0
 
     def set_play_mode(self, mode):
@@ -96,7 +106,7 @@ class GamePlay:
                 if self.current_time >= TIME_PER_MOVE:
                     self.current_time -= TIME_PER_MOVE
 
-                    if self.is_loaded is False:
+                    if self.is_replayed is False:
                         self.algorithm.best_move(self.grid)
                         self.grid.random_new_tile()
                         self.grid.redraw()
@@ -104,6 +114,48 @@ class GamePlay:
                     else:
                         self.state.load_next(self.grid.board)
                         self.grid.redraw()
+        else:
+            self.__do_statistics()
+            
+    def __do_statistics(self):
+        if self.is_statistics is False:
+            return
+        
+        if self.idx_statistics + 1 < self.n_statistics:
+            self.idx_statistics += 1
+            self.__prompt_result_for_statistic()
+            self.new_game()
+            self.state.close()
+            if self.is_replayed:
+                self.state.load_file()
+            else:
+                self.state.save_file()
+        elif self.idx_statistics + 1 == self.n_statistics:
+            self.idx_statistics += 1
+            self.__prompt_result_for_statistic()
+            self.idx_statistics += 1 
+            self.__file_statistics.close()
+
+    def __prompt_result_for_statistic(self):
+        max_tile = 0
+        for row in self.grid.board:
+            for x in row:
+                max_tile = max(max_tile, x)
+
+        n_movements = self.state.idx + 1
+        score = self.score.current_score
+
+        print(self.idx_statistics, "/", self.n_statistics)
+        print("max_tile:", max_tile)
+        print("movements:", n_movements)
+        print("score:", score)
+        print()
+
+        f = self.__file_statistics
+        f.write(f"{self.idx_statistics} / {self.n_statistics}\n")
+        f.write(f"max_tile: {max_tile}\n")
+        f.write(f"movements: {n_movements}\n")
+        f.write(f"score: {score}\n\n")
 
     def draw(self, screen: pygame.Surface):
         x, y                    = self.game_name_pos

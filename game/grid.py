@@ -156,6 +156,7 @@ class Grid:
     def copy(src: list, des: list):
         """
         This function is used to copy the board's values
+
         Parameters
         ----------
             src: list
@@ -283,6 +284,7 @@ class Grid:
         """
         Indices for movements:
             Up = 0, Down = 1, Left = 2, Right = 3
+
         Returns
         -------
             can_move: bool
@@ -307,6 +309,7 @@ class Grid:
     def move_up(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards up border
+
         Parameters
         ----------
             calculate_score: bool, default = False
@@ -353,6 +356,7 @@ class Grid:
     def move_down(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards down border
+
         Parameters
         ----------
             calculate_score: bool, default = False
@@ -389,6 +393,7 @@ class Grid:
     def move_left(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards left border
+
         Parameters
         ----------
             calculate_score: bool, default = False
@@ -425,6 +430,7 @@ class Grid:
     def move_right(self, calculate_score=False) -> None:
         """
         Move entire tiles in self.board towards right border
+
         Parameters
         ----------
             calculate_score: bool, default = False
@@ -462,9 +468,11 @@ class Grid:
         """
         Indices for directions:
             Up = 0, Down = 1, Left = 2, Right = 3
+
         Parameters
         ----------
         direction: int
+
         calculate_score: bool
         """
         if direction == 0:
@@ -484,6 +492,7 @@ class Grid:
         ----------
             who: str
                 who can be "max", "min" or "expect"
+
         Returns
         -------
             is_terminal: bool

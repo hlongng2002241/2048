@@ -12,7 +12,7 @@ class Minimax(Algorithm):
         if depth == self.max_depth or grid.is_terminal("max"):
             return -1, current_score
 
-        dirs = [0, 1, 2, 3]
+        dirs = [1, 2, 3]
         #moves is a list including possible moves for max 
         #0, 1, 2, 3
         max_score = - self.eval.INFINITY        
@@ -40,7 +40,7 @@ class Minimax(Algorithm):
 
         min_score = self.eval.INFINITY
         ROW, COLUMN         = grid.ROW, grid.COLUMN
-        RATE                = grid.RANDOM_4_RATE
+
         score_2 = 0
         score_4 = 0
         for r in range(ROW):
@@ -51,10 +51,8 @@ class Minimax(Algorithm):
                     grid.board[r][c]    = 2
                     score_2 =  self.max_player(grid, depth + 1)[1]
                     grid.board[r][c] = 0
-                    # min_score = min(min_score, score_2*(1 - RATE)+score_4* RATE)  
-                    min_score = min(min_score, score_2 * (1-RATE) + score_4 * RATE)                  
+                    min_score = min(min_score, score_2, score_4)                  
         return -1, min_score
-
     
     def best_move(self, grid: Grid):
         # function best move set a optimal move for the current states (not just tell)
@@ -62,4 +60,6 @@ class Minimax(Algorithm):
         move_idx, _         = self.max_player(grid, 0)
         if move_idx        != -1:
             grid.move(move_idx, True)
-
+        else:
+            if grid.can_move_up():
+                grid.move_up(True)

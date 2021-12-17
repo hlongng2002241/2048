@@ -81,7 +81,7 @@ Run our program from main.py file
         ```
    
       + example:
-        ```
+        ```python
         def has_no_move(self, board: list=None) -> bool:
             """
             Check if there is any movement can be applied in the given board
@@ -95,7 +95,7 @@ Run our program from main.py file
             Returns
             -------
                 value: bool
-          """
+            """
         ```
 
       + comment for object: write in the line above object declaration. 
@@ -103,7 +103,7 @@ Run our program from main.py file
       + If the names are meaningful, no comment is feasible
 
   3. (`=` arrangement) for readable code, we should write `=` like this:
-      ```
+      ```python
       self._current_score     = 0
       self._best_score        = 0
       self.titles             = ['SCORE', 'BEST']
