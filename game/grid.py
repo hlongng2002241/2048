@@ -40,6 +40,7 @@ class GridSettings:
     }
 
     BORDER_COLOR            = (164, 218, 246)
+    BACKGROUND_COLOR        = (250, 248, 240)
 
     BORDER_SIZE             = 10
     BORDER_RADIUS           = 5
@@ -131,7 +132,9 @@ class Grid:
         """
         Redraw entire board
         """
-        self.bg.fill(self.settings.BORDER_COLOR)
+        self.bg.fill(self.settings.BACKGROUND_COLOR)
+        w, h = self.bg.get_size()
+        pygame_draw.rect(self.bg, self.settings.BORDER_COLOR, (0, 0, w, h), border_radius=self.settings.BORDER_RADIUS * 3)
 
         for r in range(self.ROW):
             for c in range(self.COLUMN):

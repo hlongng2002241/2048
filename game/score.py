@@ -4,10 +4,12 @@ from src.utility import SharedFont
 
 
 class Score:
-    BACKGROUND_COLOR            = (255, 255, 255)
+    BACKGROUND_COLOR            = (250, 248, 240)
     BOX_COLOR                   = (164, 218, 246)
     SCORE_COLOR                 = (255, 255, 255)
     TITLE_COLOR                 = (12, 55, 66)
+
+    BORDER_RADIUS               = 5
 
     TITLE_SIZE                  = 16
     SCORE_SIZE                  = 24
@@ -18,6 +20,7 @@ class Score:
 
     TOP_MARGIN                  = 0
     INSIDE_SPACE                = -5
+
 
     def __init__(self) -> None:
         self._current_score     = 0
@@ -75,7 +78,7 @@ class Score:
             self.draw_box(self.bg, self._best_score, self.titles[1], self.TILE_WIDTH + self.BOX_SPACE, 0)
 
     def draw_box(self, bg, score: int, title: str, x: int, y: int):
-        pygame_draw.rect(bg, self.BOX_COLOR, (x, y, self.TILE_WIDTH, self.TILE_HEIGHT))
+        pygame_draw.rect(bg, self.BOX_COLOR, (x, y, self.TILE_WIDTH, self.TILE_HEIGHT), border_radius=self.BORDER_RADIUS)
 
         y                      += self.TOP_MARGIN
         text                    = self.font_title.render(title, True, self.TITLE_COLOR)

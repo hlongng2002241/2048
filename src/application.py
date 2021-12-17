@@ -8,14 +8,16 @@ from . menu import Menu
 class Application:
     def __init__(self):
         pygame.init()
-        self.screen         = pygame_display.set_mode((815, 600))
+        self.screen             = pygame_display.set_mode((815, 600))
 
-        self.gameplay       = GamePlay()
+        self.gameplay           = GamePlay()
 
-        self.running        = True
+        self.running            = True
 
-        self.menu           = Menu(self.gameplay)
-        self.menu.position  = (430, 50)
+        self.menu               = Menu(self.gameplay)
+        self.menu.position      = (430, 50)
+
+        self.BACKGROUND_COLOR   = (250, 248, 240)
 
     def show_fps(self, dt: float):
         """
@@ -49,7 +51,7 @@ class Application:
     
     def draw(self):
         # self.screen.fill((0, 0, 0))
-        self.screen.fill((250, 248, 240))
+        self.screen.fill(self.BACKGROUND_COLOR)
         
         self.gameplay.draw(self.screen)
         self.menu.draw(self.screen)
