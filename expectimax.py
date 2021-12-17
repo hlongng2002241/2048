@@ -64,7 +64,7 @@ class Expectimax(Algorithm):
 
         ROW, COLUMN = grid.ROW, grid.COLUMN
         RATE        = grid.RANDOM_4_RATE
-        min_score   = self.eval.INFINITY
+        best_score, count = 0, 0
 
         for r in range(ROW):
             for c in range(COLUMN):
@@ -74,9 +74,11 @@ class Expectimax(Algorithm):
                     grid.board[r][c] = 4
                     _, score_4 = self.max_move(grid, depth + 1)
                     grid.board[r][c] = 0
-                    min_score = min(min_score, score_2 * (1.0 - RATE) + score_4 * RATE)
+                    
+                    best_score += score_2 * (1.0 - RATE) + score_4 * RATE
+                    count += 1
 
-        return -1, min_score
+        return -1, best_score // count
         # there is no need to find best move for min!!!
 
     def best_move(self, grid: Grid):
