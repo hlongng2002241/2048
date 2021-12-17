@@ -45,7 +45,7 @@ class GamePlay:
 
         # =================================================
         # Statistics here
-        self.is_statistics      = False
+        self.is_statistics      = True
         self.n_statistics       = 100
         self.idx_statistics     = 0
         self.__file_statistics  = open("stat.out", "w")
@@ -120,15 +120,29 @@ class GamePlay:
         if self.is_statistics is False:
             return
         
+        max_tile = 0
+        for row in self.grid.board:
+            for x in row:
+                max_tile = max(max_tile, x)
+        
+        stop = False
+        if max_tile >= 8192:
+            stop = True
+        
         if self.idx_statistics + 1 < self.n_statistics:
             self.idx_statistics += 1
             self.__prompt_result_for_statistic()
             self.new_game()
             self.state.close()
-            if self.is_replayed:
-                self.state.load_file()
+            if stop is False:
+                if self.is_replayed:
+                    self.state.load_file()
+                else:
+                    self.state.save_file()
             else:
-                self.state.save_file()
+                self.__file_statistics.close()
+                self.idx_statistics = self.n_statistics + 1
+
         elif self.idx_statistics + 1 == self.n_statistics:
             self.idx_statistics += 1
             self.__prompt_result_for_statistic()
