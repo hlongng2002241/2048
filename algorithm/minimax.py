@@ -15,27 +15,28 @@ class Minimax(Algorithm):
         dirs = [1, 2, 3]
         #moves is a list including possible moves for max 
         #0, 1, 2, 3
-        max_score = - self.eval.INFINITY        
-        best_move = -1
+        max_score     = - self.eval.INFINITY        
+        best_move     = -1
 
         for move in dirs:
             save_board = list()
             if grid.can_move(move):
-                temp_score = max_score
+                temp_score    = max_score
                 grid.copy(grid.board, save_board)
                 # copy from source to destination
                 grid.move(move)
-                max_score = max(max_score, self.min_player(grid, depth + 1)[1])
+
+                max_score     = max(max_score, self.min_player(grid, depth + 1)[1])
                 grid.copy(save_board, grid.board)
                 if max_score > temp_score:
                     best_move = move
+
         return best_move, max_score
 
     def min_player(self, grid:Grid, depth):
 
         current_score = self.eval.evaluate(grid, False)
-
-        if depth == self.max_depth or grid.is_terminal("max"):
+        if depth  == self.max_depth or grid.is_terminal("max"):
             return -1, current_score
 
         min_score = self.eval.INFINITY
@@ -45,12 +46,12 @@ class Minimax(Algorithm):
         score_4 = 0
         for r in range(ROW):
             for c in range(COLUMN):
-                if grid.board[r][c] == 0:
-                    grid.board[r][c]    = 4
+                if grid.board[r][c]     == 0:
+                    grid.board[r][c]     = 4
                     score_4 =  self.max_player(grid, depth + 1)[1]
-                    grid.board[r][c]    = 2
+                    grid.board[r][c]     = 2
                     score_2 =  self.max_player(grid, depth + 1)[1]
-                    grid.board[r][c] = 0
+                    grid.board[r][c]     = 0
                     min_score = min(min_score, score_2, score_4)                  
         return -1, min_score
     
