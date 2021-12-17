@@ -1,37 +1,24 @@
 from types import GetSetDescriptorType
 from pygame.constants import BLENDMODE_ADD
 from game.grid import Grid
+from copy import deepcopy
 
 class Evaluation:   
     GAME_OVER           = -9999999999
     INFINITY            = 999999999999 
 
+    BASIS_MATRIX        = [
+        [10, 7, 4, 1],
+        [100, 70, 40, 10],
+        [1000, 700, 400, 100],
+        [40000, 7000, 4000, 1000],
+    ]
 
-    WEIGHTS_MATRIX       = [
-        [
-            [10, 7, 4, 1],
-            [100, 70, 40, 10],
-            [1000, 700, 400, 100],
-            [40000, 7000, 4000, 1000],
-        ],
-        [
-            [1, 4, 7, 10],
-            [10, 40, 70, 100],
-            [100, 400, 700, 1000],
-            [40000, 7000, 4000, 1000],
-        ],
-        [
-            [10, 7, 4, 1],
-            [100, 70, 40, 10],
-            [100, 400, 700, 1000],
-            [40000, 7000, 4000, 1000],
-        ],
-        [
-            [1, 4, 7, 10],
-            [100, 70, 40, 10],
-            [100, 400, 700, 1000],
-            [40000, 7000, 4000, 1000],
-        ]
+    WEIGHTS_MATRIX      = [
+        [10, 7, 4, 1],
+        [100, 70, 40, 10],
+        [1000, 700, 400, 100],
+        [40000, 7000, 4000, 1000],
     ]
     
                           
@@ -103,16 +90,7 @@ class Evaluation:
 
         return cnt
 
-    def __choose_weight_index(self, board: list, is_strict: bool) -> int:
-        """
-        + Choose the suitable weight matrix for the evaluation
-        + This bases on the playing strategy of the AI
-            - It check from the last row to the first one
-            - If the last row is not good, use 0
-            - If the last row is good enough, use 1
-            - If the last row and the second last row is good enough, use 2
-            - And so on ...
-        """
+    def set_up_weight_matrix(self, board: list, is_strict: bool):
         # store to a new array
         values = list()
         for row in board:
@@ -121,37 +99,53 @@ class Evaluation:
 
         values.sort(reverse=True)    
 
-        def is_good_enough(r, reverse) -> bool:    
+        def is_good_enough(r: int, reverse: bool) -> bool:    
             if reverse:
                 index_c = range(self.COLUMN - 1, -1, -1)
             else:
                 index_c = range(self.COLUMN)
 
             strike = 0
+            temp_values = deepcopy(values) 
+            is_good = True
             
             for c in index_c:
-                if values[0] != 0:
-                    if values[0] == board[r][c]:
-                        values.pop(0)
+                if temp_values[0] != 0:
+                    if temp_values[0] == board[r][c]:
+                        temp_values.pop(0)
                         strike += 1
-                    elif is_strict is False and strike == 3 and values[1] != 0 and values[1] == board[r][c]:
-                        values.pop(1)
+                    elif is_strict is False and strike == 3 and temp_values[1] != 0 and temp_values[1] == board[r][c]:
+                        temp_values.pop(1)
                     else:
-                        return False
+                        is_good = False
+                        break
                 else:
-                    return False
+                    is_good = False
+                    break
+            
+            for c in index_c:
+                values.remove(board[r][c])
 
-            return True
-
-        idx = 0
-        for r in range(self.ROW - 1, 0, -1):
-            if is_good_enough(r, not bool(r % 2)):
-                idx += 1
+            return is_good
+        
+        def set_row_matrix(r: int, reverse: bool):
+            if reverse:
+                index_c = range(self.COLUMN - 1, -1, -1)
             else:
-                break
+                index_c = range(self.COLUMN)
+            
+            for i, c in enumerate(index_c):
+                self.WEIGHTS_MATRIX[r][i] = self.BASIS_MATRIX[r][c]
 
-        return idx
-    
+        reverse = False
+        is_good = False
+        for r in range(self.ROW - 1, -1, -1):
+            if is_good:
+                reverse = not reverse
+            
+            set_row_matrix(r, reverse)
+            is_good = is_good_enough(r, reverse)
+
     def __evaluate_tiles_order(self, grid: Grid, is_movement: bool) -> int:
         if is_movement:
             if (
@@ -162,122 +156,12 @@ class Evaluation:
                 return self.GAME_OVER
         
         cnt = 0
-        idx = self.__choose_weight_index(grid.board, False)
-        # => có phần strict và non-strict, cả hai đều có kết quả tốt
-        # để non-strict chữa lỗi tốt hơn
-        # còn để strict nếu ko có lỗi khi chơi sẽ cho kết quả tốt hơn
-        # idx = 3
-        
+        self.set_up_weight_matrix(grid.board, False)
+
         for r in range(self.ROW):
             for c in range(self.COLUMN):
-                cnt += grid.board[r][c] * self.WEIGHTS_MATRIX[idx][r][c]
+                cnt += grid.board[r][c] * self.WEIGHTS_MATRIX[r][c]
 
         return cnt
     
-    # WEIGHTS_MATRIX       = [
-    #     [
-    #         [100, 75, 50, 25],
-    #         [500, 400, 300, 200],
-    #         [1000, 850, 750, 600],
-    #         [5000, 1500, 1200, 1100],
-    #     ],
-    #     [
-    #         [25, 50, 75, 100],
-    #         [200, 300, 400, 500],
-    #         [600, 750, 850, 1000],
-    #         [5000, 1500, 1200, 1100]
-    #     ],
-    #     [
-    #         [100, 75, 50, 25],
-    #         [500, 400, 300, 200],
-    #         [600, 750, 850, 1000],
-    #         [5000, 1500, 1200, 1100]
-    #     ],
-    #     [
-    #         [25, 50, 75, 100],
-    #         [500, 400, 300, 200],
-    #         [600, 750, 850, 1000],
-    #         [5000, 1500, 1200, 1100]
-    #     ]
-    # ]
-
-    # WEIGHTS_MATRIX       = [
-    #     [
-    #         [10, 8, 5, 2],
-    #         [100, 85, 50, 25],
-    #         [1000, 850, 500, 250],
-    #         [10000, 8500, 5000, 2500],
-    #     ],
-    #     [
-    #         [2, 5, 8, 10],
-    #         [25, 50, 85, 100],
-    #         [1000, 850, 500, 250],
-    #         [10000, 8500, 5000, 2500],
-    #     ],
-    #     [
-    #         [10, 8, 5, 2],
-    #         [100, 85, 50, 25],
-    #         [200, 500, 850, 1000],
-    #         [10000, 8500, 5000, 2500],
-    #     ],
-    #     [
-    #         [2, 5, 8, 10],
-    #         [100, 85, 50, 25],
-    #         [200, 500, 850, 1000],
-    #         [10000, 8500, 5000, 2500],
-    #     ]
-    # ]
-
-    # WEIGHTS_MATRIX       = [
-    #     [
-    #         [10, 7, 4, 1],
-    #         [100, 70, 40, 10],
-    #         [1000, 700, 400, 100],
-    #         [10000, 7000, 4000, 1000],
-    #     ],
-    #     [
-    #         [1, 4, 7, 10],
-    #         [10, 40, 70, 100],
-    #         [200, 400, 700, 1000],
-    #         [10000, 7000, 4000, 1000],
-    #     ],
-    #     [
-    #         [10, 7, 4, 1],
-    #         [100, 70, 40, 10],
-    #         [200, 400, 700, 1000],
-    #         [10000, 7000, 4000, 1000],
-    #     ],
-    #     [
-    #         [1, 4, 7, 10],
-    #         [100, 70, 40, 10],
-    #         [200, 400, 700, 1000],
-    #         [10000, 7000, 4000, 1000],
-    #     ]
-    # ]
-
-    # WEIGHTS_MATRIX       = [
-    #     [
-    #         [10, 7, 3, 1],
-    #         [100, 70, 30, 10],
-    #         [1000, 700, 300, 100],
-    #         [40000, 14000, 6000, 2000],
-    #     ],
-    #     [
-    #         [1, 3, 7, 10],
-    #         [10, 30, 70, 100],
-    #         [200, 600, 1400, 2000],
-    #         [40000, 14000, 6000, 2000],
-    #     ],
-    #     [
-    #         [10, 7, 3, 1],
-    #         [200, 140, 60, 20],
-    #         [200, 600, 1400, 2000],
-    #         [40000, 14000, 6000, 2000],
-    #     ],
-    #     [
-    #         [2, 6, 14, 20],
-    #         [200, 140, 60, 20],
-    #         [200, 600, 1400, 2000],
-    #         [40000, 14000, 6000, 2000],
-    #     ]
-    # ]
+    
