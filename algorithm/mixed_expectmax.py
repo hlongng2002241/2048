@@ -7,10 +7,10 @@ class MixedExpectimax(Algorithm):
         super().__init__(depth)
 
         self.switch_sum                 = [1, 2, 4, 8, 16, 32, 64, 128, 256]
-        # self.PO_INF = self.eval.INFINITY * self.max_depth 
-        # self.NE_INF = -self.eval.INFINITY * self.max_depth
-        self.PO_INF = float("inf")
-        self.NE_INF = float("-inf")
+        self.PO_INF = self.eval.INFINITY * self.max_depth 
+        self.NE_INF = -self.eval.INFINITY * self.max_depth
+        # self.PO_INF                     = float("inf")
+        # self.NE_INF                     = float("-inf")
 
 
     def max_move(self, grid: Grid, a: int, b: int, d: int) -> tuple[int, int]:
@@ -36,10 +36,11 @@ class MixedExpectimax(Algorithm):
                 if best_score < score:
                     best_score          = score 
                     best_move           = direct
+
                 if a < best_score:
                     a                   = best_score
                 if b <= a:
-                    break
+                    return (best_move, best_score)
         
         return (best_move, best_score)
     
@@ -65,13 +66,14 @@ class MixedExpectimax(Algorithm):
 
                     score               = score_2 * (1.0 - RATE) + score_4 * RATE
                     score              += current_score * self.switch_sum[d]
+
                     if best_score > score:
                         best_score      = score
                     
                     if b > best_score:
                         b               = best_score
                     if b <= a:
-                        break
+                        return (-1, best_score)
 
         return (-1, best_score)
 
