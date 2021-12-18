@@ -51,7 +51,7 @@ class GridSettings:
 class Grid:
     ROW                     = 4
     COLUMN                  = 4
-    RANDOM_4_RATE           = 0.05
+    RANDOM_4_RATE           = 0.1
     RAMDOM_RANGE            = 1000
 
     def __init__(self, score: Score, state: State):
