@@ -4,7 +4,14 @@ from . utility import SharedFont
 from game.grid import Grid
 from game.score import Score
 from game.state import State
+from algorithm.expectimax import Expectimax
+from algorithm.minimax import Minimax
 from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
+from algorithm.mixed_expectmax import MixedExpectimax
+
+import time
+import shutil
+import os
 
 
 class GamePlay:
@@ -19,29 +26,24 @@ class GamePlay:
         # Limit if move per second
         self.MOVES_PER_SECOND   = 10
 
-        self.score              = Score()
-        self.score.position     = (215, 50)
+        self.__score            = Score()
+        self.__score.position   = (215, 50)
+
+        self.__state            = State("log.txt", "save")
+        self.is_replayed        = False
         
-        self.grid               = Grid(self.score)
-        self.grid.position      = (30, 200)
+        self.__grid             = Grid(self.__score, self.__state)
+        self.__grid.position    = (30, 200)
+
+        self.__state.save_next(self.__grid.board, self.__score)
 
         font                    = SharedFont().get_font(74)
         font.bold               = True
-        self.game_name          = font.render("2048", True, (12, 55, 66))
-        self.game_name_pos      = (30, 21)
+        self.__game_name        = font.render("2048", True, (12, 55, 66))
+        self.__game_name_pos    = (30, 21)
 
         # Declaration of algorithm, default: Minimax
-        self.algorithm          = MinimaxAlphaBeta(4)  # change this None
-
-        self.state              = State("log.txt")
-        self.is_replayed        = False
-        
-        if self.is_replayed is True:
-            self.state.load_file()
-            self.state.load_next(self.grid.board)
-        else:
-            self.state.save_file()
-            self.state.save_next(self.grid.board)
+        self.algorithm          = MinimaxAlphaBeta(4)
 
         # =================================================
         # Statistics here
@@ -51,10 +53,13 @@ class GamePlay:
         self.__file_statistics  = open("stat.out", "w")
         # =================================================
 
-
     def new_game(self):
-        self.grid.restart()
-        self.score.reset()
+        self.__grid.restart()
+        self.__score.reset()
+        if self.is_replayed is False:
+            self.__state.open_file("log.txt", "save")
+        else:
+            self.load_replay_file(self.algorithm)
         self.current_time       = 0
 
     def set_play_mode(self, mode):
@@ -65,39 +70,65 @@ class GamePlay:
         self.algorithm          = algo
         self.current_time       = 0
 
+        if self.is_replayed:
+            self.load_replay_file(algo)
+
+    def load_replay_file(self, algo):
+        if self.__state.mode == "load":
+            return
+
+        if isinstance(algo, Minimax):
+            self.__state.open_file("./saved/minimax.out", "load")
+        elif isinstance(algo, MinimaxAlphaBeta):
+            self.__state.open_file("./saved/minimax_ab.out", "load")
+        elif isinstance(algo, Expectimax):
+            self.__state.open_file("./saved/expectimax.out", "load")
+        elif isinstance(algo, MixedExpectimax):
+            self.__state.open_file("./saved/mixed.out", "load")
+    
+    def switch_replay_mode(self):
+        if self.is_replayed is False:
+            self.is_replayed = True
+            self.load_replay_file(self.algorithm)
+            print("replay mode: ON")
+        else:
+            self.is_replayed = False
+            self.__state.open_file("log.txt", "save")
+            print("replay mode: OFF")
+
     def set_moves_per_second(self, moves):
         self.MOVES_PER_SECOND   = moves
         self.current_time       = 0
 
     def process_input(self, event: Event):
         if event.type == pygame.KEYDOWN:
-            if self.PLAY_MODE == self.MODE_HUMAN and self.grid.is_terminal("max") is False:
+            if self.PLAY_MODE == self.MODE_HUMAN and self.__grid.is_terminal("max") is False:
                 if event.key == pygame.K_LEFT:
-                    if self.grid.can_move_left():
-                        self.grid.move_left(True)
-                        self.grid.random_new_tile()
-                        self.grid.redraw()
+                    if self.__grid.can_move_left():
+                        self.__grid.move_left(True)
+                        self.__grid.random_new_tile()
+                        self.__grid.redraw()
 
                 elif event.key == pygame.K_RIGHT:
-                    if self.grid.can_move_right():
-                        self.grid.move_right(True)
-                        self.grid.random_new_tile()
-                        self.grid.redraw()
+                    if self.__grid.can_move_right():
+                        self.__grid.move_right(True)
+                        self.__grid.random_new_tile()
+                        self.__grid.redraw()
 
                 elif event.key == pygame.K_UP:
-                    if self.grid.can_move_up():
-                        self.grid.move_up(True)
-                        self.grid.random_new_tile()
-                        self.grid.redraw()
+                    if self.__grid.can_move_up():
+                        self.__grid.move_up(True)
+                        self.__grid.random_new_tile()
+                        self.__grid.redraw()
 
                 elif event.key == pygame.K_DOWN:
-                    if self.grid.can_move_down():
-                        self.grid.move_down(True)
-                        self.grid.random_new_tile()
-                        self.grid.redraw()
+                    if self.__grid.can_move_down():
+                        self.__grid.move_down(True)
+                        self.__grid.random_new_tile()
+                        self.__grid.redraw()
 
     def update(self, dt):
-        if self.grid.is_terminal("max") is False:
+        if self.__grid.is_terminal("max") is False:
             if self.PLAY_MODE == self.MODE_AI:
                 self.current_time      += dt
                 TIME_PER_MOVE           = 1.0 / self.MOVES_PER_SECOND
@@ -106,57 +137,64 @@ class GamePlay:
                     self.current_time -= TIME_PER_MOVE
 
                     if self.is_replayed is False:
-                        self.algorithm.best_move(self.grid)
-                        self.grid.random_new_tile()
-                        self.grid.redraw()
-                        self.state.save_next(self.grid.board)
+                        self.algorithm.best_move(self.__grid)
+                        self.__grid.random_new_tile()
+                        self.__grid.redraw()
                     else:
-                        self.state.load_next(self.grid.board)
-                        self.grid.redraw()
+                        self.__state.load_next(self.__grid.board, self.__score)
+                        self.__grid.redraw()
         else:
+            self.__state.close_file("save")
             self.__do_statistics()
-            
+    
+    def __store_special_log(self):
+        src = "log.txt"
+        des = "./saved/log.out"
+        shutil.copyfile(src, des)
+
+        if isinstance(self.algorithm, Minimax):
+            new_name = f"./saved/minimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
+        elif isinstance(self.algorithm, MinimaxAlphaBeta):
+            new_name = f"./saved/minimax_ab_d{self.algorithm.max_depth}_{int(time.time())}.out"
+        elif isinstance(self.algorithm, Expectimax):
+            new_name = f"./saved/expectimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
+        elif isinstance(self.algorithm, MixedExpectimax):
+            new_name = f"./saved/mixed_d{self.algorithm.max_depth}_{int(time.time())}.out"
+
+        os.rename(des, new_name)
+        
     def __do_statistics(self):
         if self.is_statistics is False:
             return
         
         max_tile = 0
-        for row in self.grid.board:
+        for row in self.__grid.board:
             for x in row:
                 max_tile = max(max_tile, x)
         
-        stop = False
         if max_tile >= 8192:
-            stop = True
+            self.__store_special_log()
         
         if self.idx_statistics + 1 < self.n_statistics:
             self.idx_statistics += 1
             self.__prompt_result_for_statistic()
             self.new_game()
-            self.state.close()
-            if stop is False:
-                if self.is_replayed:
-                    self.state.load_file()
-                else:
-                    self.state.save_file()
-            else:
-                self.__file_statistics.close()
-                self.idx_statistics = self.n_statistics + 1
 
         elif self.idx_statistics + 1 == self.n_statistics:
             self.idx_statistics += 1
             self.__prompt_result_for_statistic()
+
             self.idx_statistics += 1 
             self.__file_statistics.close()
 
     def __prompt_result_for_statistic(self):
         max_tile = 0
-        for row in self.grid.board:
+        for row in self.__grid.board:
             for x in row:
                 max_tile = max(max_tile, x)
 
-        n_movements = self.state.idx + 1
-        score = self.score.current_score
+        n_movements = self.__score.num_moves
+        score = self.__score.current_score
 
         print(self.idx_statistics, "/", self.n_statistics)
         print("max_tile:", max_tile)
@@ -171,9 +209,9 @@ class GamePlay:
         f.write(f"score: {score}\n\n")
 
     def draw(self, screen: pygame.Surface):
-        x, y                    = self.game_name_pos
-        w, h                    = self.game_name.get_size()
-        screen.blit(self.game_name, (x, y, w, h))
+        x, y                    = self.__game_name_pos
+        w, h                    = self.__game_name.get_size()
+        screen.blit(self.__game_name, (x, y, w, h))
 
-        self.score.draw(screen)
-        self.grid.draw(screen)
+        self.__score.draw(screen)
+        self.__grid.draw(screen)

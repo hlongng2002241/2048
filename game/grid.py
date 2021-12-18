@@ -3,6 +3,7 @@ import pygame.draw as pygame_draw
 from src.utility import SharedFont
 import random
 from . score import Score
+from . state import State
 
 
 class GridSettings:
@@ -53,8 +54,9 @@ class Grid:
     RANDOM_4_RATE           = 0.05
     RAMDOM_RANGE            = 1000
 
-    def __init__(self, score: Score = None):
-        self.score          = score
+    def __init__(self, score: Score, state: State):
+        self.__score        = score
+        self.__state        = state
 
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
         self.settings       = GridSettings()
@@ -63,9 +65,9 @@ class Grid:
             self.settings.BORDER_SIZE * (self.ROW + 1)
             + self.settings.TILE_SIZE * self.ROW
         )
-        self.bg             = Surface((size, size))
-        self.font           = SharedFont().get_font(34)
-        self.font.bold      = True
+        self.__bg           = Surface((size, size))
+        self.__font         = SharedFont().get_font(34)
+        self.__font.bold    = True
         self.position       = (0, 0)
 
         self.random_new_tile()
@@ -110,7 +112,7 @@ class Grid:
         y                   = self.settings.BORDER_SIZE + size * r
         bg_color            = self.settings.BG_COLOR[tile_value]
         pygame_draw.rect(
-            self.bg,
+            self.__bg,
             bg_color,
             (x, y, self.settings.TILE_SIZE, self.settings.TILE_SIZE),
             border_radius=self.settings.BORDER_RADIUS,
@@ -121,20 +123,20 @@ class Grid:
 
         # draw foreground: tile's value
         color               = self.settings.COLOR[tile_value]
-        text_surface        = self.font.render(str(tile_value), True, color)
+        text_surface        = self.__font.render(str(tile_value), True, color)
         w, h                = text_surface.get_width(), text_surface.get_height()
         cell_size           = self.settings.TILE_SIZE
         x                  += (cell_size - w) / 2
         y                  += (cell_size - h) / 2
-        self.bg.blit(text_surface, (x, y, w, h))
+        self.__bg.blit(text_surface, (x, y, w, h))
 
     def redraw(self):
         """
         Redraw entire board
         """
-        self.bg.fill(self.settings.BACKGROUND_COLOR)
-        w, h = self.bg.get_size()
-        pygame_draw.rect(self.bg, self.settings.BORDER_COLOR, (0, 0, w, h), border_radius=self.settings.BORDER_RADIUS * 3)
+        self.__bg.fill(self.settings.BACKGROUND_COLOR)
+        w, h = self.__bg.get_size()
+        pygame_draw.rect(self.__bg, self.settings.BORDER_COLOR, (0, 0, w, h), border_radius=self.settings.BORDER_RADIUS * 3)
 
         for r in range(self.ROW):
             for c in range(self.COLUMN):
@@ -144,10 +146,10 @@ class Grid:
         """
         Draw
         """
-        w, h                = self.bg.get_size()
+        w, h                = self.__bg.get_size()
         x, y                = self.position
 
-        screen.blit(self.bg, (x, y, w, h))
+        screen.blit(self.__bg, (x, y, w, h))
 
     def restart(self):
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
@@ -319,7 +321,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
         # Loop over all columns
@@ -339,7 +342,7 @@ class Grid:
                 elif self.board[i][j] == k:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w += 1
                     k = 0
                 # if 2 tiles don't match, write the first tile at location w
@@ -366,7 +369,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -380,7 +384,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w -= 1
                     k = 0
                 else:
@@ -403,7 +407,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -417,7 +422,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w += 1
                     k = 0
                 else:
@@ -440,7 +445,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
             
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -454,7 +460,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w -= 1
                     k = 0
                 else:
