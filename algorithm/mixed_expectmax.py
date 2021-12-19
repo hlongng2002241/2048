@@ -7,11 +7,15 @@ class MixedExpectimax(Algorithm):
         super().__init__(depth)
 
         self.switch_sum                 = [1, 2, 4, 8, 16, 32, 64, 128, 256]
-        self.PO_INF = self.eval.INFINITY * self.max_depth 
-        self.NE_INF = -self.eval.INFINITY * self.max_depth
-        # self.PO_INF                     = float("inf")
-        # self.NE_INF                     = float("-inf")
+        
+        self.cumulate_sum               = list()
+        s                               = 0
+        for x in self.switch_sum:
+            s += x
+            self.cumulate_sum.append(s)
 
+    def infinity(self):
+        return self.eval.INFINITY * self.cumulate_sum[self.max_depth]
 
     def max_move(self, grid: Grid, a: int, b: int, d: int) -> tuple[int, int]:
         current_score                   = self.eval.evaluate(grid, True)
@@ -19,9 +23,9 @@ class MixedExpectimax(Algorithm):
         if d >= self.max_depth or grid.is_terminal(who="max"):
             return (-1, current_score * self.switch_sum[d])
         
-        dirs                            = [1,2,3]
+        dirs                            = [0,1,2,3]
         best_move                       = -1
-        best_score                      = self.NE_INF
+        best_score                      = -self.infinity()
 
         for direct in dirs:
             if grid.can_move(direct):
@@ -53,7 +57,7 @@ class MixedExpectimax(Algorithm):
         ROW, COLUMN                     = grid.ROW, grid.COLUMN
         RATE                            = grid.RANDOM_4_RATE
 
-        best_score                      = self.PO_INF
+        best_score                      = self.infinity()
 
         for r in range(ROW):
             for c in range(COLUMN):
@@ -78,11 +82,11 @@ class MixedExpectimax(Algorithm):
         return (-1, best_score)
 
     def best_move(self, grid: Grid):
-        alpha = self.NE_INF
-        beta = self.PO_INF
-        (move_idx, _) = self.max_move(grid, alpha, beta, 0)
+        alpha           = -self.infinity()
+        beta            = self.infinity()
+        (move_idx, _)   = self.max_move(grid, alpha, beta, 0)
         if move_idx != -1:
             grid.move(move_idx, True)
-        else:
-            if grid.can_move_up():
-                grid.move_up(True)
+        # else:
+        #     if grid.can_move_up():
+        #         grid.move_up(True)
