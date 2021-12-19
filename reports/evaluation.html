@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>evaluation.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="evaluation">Evaluation:</h1>
+<h2 id="overview">Overview:</h2>
+<ul>
+<li>Evaluation (or heuristic) is the task where we calculate score for the board. This score is not the same as the score the game uses, this score can be considered to be the signal that makes the AI knows how good the board is to make decision for the next move.</li>
+<li>There are lots of ways to achieve this and here is our strategy:
+<ul>
+<li>
+<p>The average score of none empty tiles</p>
+</li>
+<li>
+<p>The number of empty tiles</p>
+</li>
+<li>
+<p>The number of possible merges</p>
+</li>
+<li>
+<p>The structure of the board or we can call it monotonicity of the board</p>
+</li>
+<li>
+<p><code>Note</code>: We use the weight for each evaluation: <br/>
+1, 30, 40, 2 <br/>
+with respect to the same order as above <br/></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="details">Details:</h2>
+<h3 id="lets-start-with-the-first-evaluation-average-value-of-none-empty-tiles">Let's start with the first evaluation: Average value of none empty tiles:</h3>
+<ul>
+<li>Like its name, it is pretty simple to understand.</li>
+<li>Here is the code:<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_evaluate_average</span><span class="hljs-params">(self, board: list)</span> -&gt; int:</span>
+    s, cnt          = <span class="hljs-number">0</span>, <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> board:
+        <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> row:
+            s      += x
+            cnt    += <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+    
+    <span class="hljs-keyword">return</span> s // cnt
+</div></code></pre>
+</li>
+</ul>
+<h3 id="next-is-the-easiest-evaluation-number-of-empty-tiles">Next is the easiest evaluation: Number of empty tiles:</h3>
+<ul>
+<li>We simply access all tiles in the board with two nest for-loop and check if their are empty or not<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_evaluate_empty_tile</span><span class="hljs-params">(self, board: list)</span> -&gt; int:</span>
+    cnt             = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> board:
+        <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> row:
+            cnt    += <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> x == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+    
+    <span class="hljs-keyword">return</span> cnt
+</div></code></pre>
+</li>
+</ul>
+<h3 id="after-that-we-get-the-evaluation-which-is-a-bit-harder-to-handle-number-of-possible-merge">After that, we get the evaluation which is a bit harder to handle: Number of possible merge:</h3>
+<ul>
+<li>The idea is really easy:
+<ul>
+<li>
+<p>First, we initialize 2 list to mark down the tiles which are counted before</p>
+</li>
+<li>
+<p>Second, we search for two tiles which are adjacent and have the same tile</p>
+<ul>
+<li>If those are in the same row, check if they are used or not</li>
+<li>If none of they are used, increase <code>cnt</code> to the sum of their values</li>
+<li>Same with column</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_evaluate_potential_merge</span><span class="hljs-params">(self, board: list)</span> -&gt; int:</span>
+    used_in_R       = [[<span class="hljs-literal">False</span> <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> range(self.COLUMN)] <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> range(self.ROW)]
+    used_in_C       = [[<span class="hljs-literal">False</span> <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> range(self.COLUMN)] <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> range(self.ROW)]
+    cnt             = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> range(self.ROW):
+        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> range(self.COLUMN):
+
+            <span class="hljs-keyword">if</span> r + <span class="hljs-number">1</span> &lt; self.ROW <span class="hljs-keyword">and</span> board[r][c] == board[r + <span class="hljs-number">1</span>][c]:
+                <span class="hljs-keyword">if</span> used_in_R[r][c] == <span class="hljs-literal">False</span> <span class="hljs-keyword">and</span> used_in_R[r + <span class="hljs-number">1</span>][c] == <span class="hljs-literal">False</span>:
+                    cnt                    += board[r][c] * <span class="hljs-number">2</span>
+                    used_in_R[r][c]         = <span class="hljs-literal">True</span>
+                    used_in_R[r + <span class="hljs-number">1</span>][c]     = <span class="hljs-literal">True</span>    
+                
+            <span class="hljs-keyword">if</span> c + <span class="hljs-number">1</span> &lt; self.COLUMN <span class="hljs-keyword">and</span> board[r][c] == board[r][c + <span class="hljs-number">1</span>]:
+                <span class="hljs-keyword">if</span> used_in_C[r][c] == <span class="hljs-literal">False</span> <span class="hljs-keyword">and</span> used_in_C[r][c + <span class="hljs-number">1</span>] == <span class="hljs-literal">False</span>:
+                    cnt                    += board[r][c] * <span class="hljs-number">2</span>
+                    used_in_C[r][c]         = <span class="hljs-literal">True</span>
+                    used_in_C[r][c + <span class="hljs-number">1</span>]     = <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">return</span> cnt
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="finally-we-handle-the-hardest-evaluation-monotonicity-of-the-board">Finally we handle the hardest evaluation: Monotonicity of the board</h3>
+<ul>
+<li>
+<p>Start with the weight matrix:</p>
+<pre class="hljs"><code><div>    [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">7</span>, <span class="hljs-number">10</span>],
+    [<span class="hljs-number">100</span>, <span class="hljs-number">70</span>, <span class="hljs-number">40</span>, <span class="hljs-number">10</span>],
+    [<span class="hljs-number">100</span>, <span class="hljs-number">400</span>, <span class="hljs-number">700</span>, <span class="hljs-number">1000</span>],
+    [<span class="hljs-number">30000</span>, <span class="hljs-number">7000</span>, <span class="hljs-number">4000</span>, <span class="hljs-number">1000</span>],
+</div></code></pre>
+</li>
+<li>
+<p>Here is one of four matrices we use and this is the final matrix</p>
+</li>
+<li>
+<p>We match each tile in the board with a single score to generate the monotonicity of the board. Here you can see the location values is decrease in a particular direction</p>
+</li>
+<li>
+<p>Also, to choose the suitable matrix (as I said above that we have 4 matrix), we determine base on the tiles in each row</p>
+</li>
+<li>
+<p>For example:</p>
+<ul>
+<li>if the last row is not good, we use matrix number 0</li>
+<li>if the last row is good enough, we use matrix number 1</li>
+<li>if the last and second last rows are good enough, we use matrix number 2</li>
+<li>and so on ...</li>
+</ul>
+</li>
+<li>
+<p><code>Note</code>: <code>good enough</code> is just a way of speaking</p>
+</li>
+<li>
+<p>Here is the code to choose suitable matrix:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_choose_weight_index</span><span class="hljs-params">(self, board: list)</span> -&gt; int:</span>
+    <span class="hljs-string">"""
+    Choose the suitable weight matrix for the evaluation
+    This bases on the playing strategy of the AI
+        It check from the last row to the first one
+        If the last row is not good, use 0
+        If the last row is good enough, use 1
+        If the last row and the second last row is good enough, use 2
+        And so on ...
+    """</span>
+</div></code></pre>
+<p>and the method to check if the row is good enough or not:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">check_row</span><span class="hljs-params">(r, reverse)</span> -&gt; bool:</span>
+    ...
+</div></code></pre>
+<ul>
+<li>You can see more in the source code</li>
+</ul>
+</li>
+<li>
+<p>Finally is the code for evaluation idea:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__evaluate_tiles_order</span><span class="hljs-params">(self, grid: Grid, is_movement: bool)</span> -&gt; int:</span>
+    <span class="hljs-keyword">if</span> is_movement:
+        <span class="hljs-keyword">if</span> (
+            grid.can_move_left() <span class="hljs-keyword">is</span> <span class="hljs-literal">False</span>
+            <span class="hljs-keyword">and</span> grid.can_move_right() <span class="hljs-keyword">is</span> <span class="hljs-literal">False</span>
+            <span class="hljs-keyword">and</span> grid.can_move_down() <span class="hljs-keyword">is</span> <span class="hljs-literal">False</span>
+        ):
+            <span class="hljs-keyword">return</span> self.GAME_OVER
+    
+    cnt = <span class="hljs-number">0</span>
+    idx = self.__choose_weight_index(grid.board, <span class="hljs-literal">False</span>)
+    
+    <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> range(self.ROW):
+        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> range(self.COLUMN):
+            cnt += grid.board[r][c] * self.WEIGHTS_MATRIX[idx][r][c]
+
+    <span class="hljs-keyword">return</span> cnt
+</div></code></pre>
+</li>
+<li>
+<p>Also, we avoid the moving up as the structure of the board may be broken</p>
+</li>
+</ul>
+<h3 id="get-everything-together">Get everything together:</h3>
+<ul>
+<li>
+<p>After implementing all the strategies, we associate them in one</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">evaluate</span><span class="hljs-params">(self, grid: Grid, is_movement: bool)</span> -&gt; int:</span>
+<span class="hljs-string">"""
+Evaluate the score of the board
+
+Parameters
+----------
+grid: Grid
+
+is_movement: bool
+
+Returns
+-------
+    evaluation: int
+        return the evaluation value
+"""</span>
+<span class="hljs-keyword">if</span> grid.has_no_move():
+    <span class="hljs-keyword">return</span> self.GAME_OVER
+
+total = <span class="hljs-number">0</span>
+total += <span class="hljs-number">2</span> * self._evaluate_tiles_order(grid, is_movement)
+total += <span class="hljs-number">1</span> * self._evaluate_average(grid.board)
+total += <span class="hljs-number">40</span> * self._evaluate_potential_merge(grid.board)
+total += <span class="hljs-number">30</span> * self._evaluate_empty_tile(grid.board)
+<span class="hljs-keyword">return</span> total
+</div></code></pre>
+</li>
+</ul>
+
+</body>
+</html>

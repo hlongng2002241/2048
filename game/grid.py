@@ -1,11 +1,9 @@
-#fix the get to move func
-
 from pygame import Surface
 import pygame.draw as pygame_draw
 from src.utility import SharedFont
 import random
 from . score import Score
-from copy import deepcopy
+from . state import State
 
 
 class GridSettings:
@@ -43,21 +41,23 @@ class GridSettings:
     }
 
     BORDER_COLOR            = (164, 218, 246)
+    BACKGROUND_COLOR        = (250, 248, 240)
 
     BORDER_SIZE             = 10
     BORDER_RADIUS           = 5
     TILE_SIZE               = 80
 
 
-
 class Grid:
     ROW                     = 4
     COLUMN                  = 4
-    RANDOM_4_RATE           = 0.10
+    RANDOM_4_RATE           = 0.1
     RAMDOM_RANGE            = 1000
 
-    def __init__(self, score: Score = None):
-        self.score          = score
+    def __init__(self, score: Score, state: State):
+        self.__score        = score
+        self.__state        = state
+
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
         self.settings       = GridSettings()
 
@@ -65,9 +65,9 @@ class Grid:
             self.settings.BORDER_SIZE * (self.ROW + 1)
             + self.settings.TILE_SIZE * self.ROW
         )
-        self.bg             = Surface((size, size))
-        self.font           = SharedFont().get_font(34)
-        self.font.bold      = True
+        self.__bg           = Surface((size, size))
+        self.__font         = SharedFont().get_font(34)
+        self.__font.bold    = True
         self.position       = (0, 0)
 
         self.random_new_tile()
@@ -112,7 +112,7 @@ class Grid:
         y                   = self.settings.BORDER_SIZE + size * r
         bg_color            = self.settings.BG_COLOR[tile_value]
         pygame_draw.rect(
-            self.bg,
+            self.__bg,
             bg_color,
             (x, y, self.settings.TILE_SIZE, self.settings.TILE_SIZE),
             border_radius=self.settings.BORDER_RADIUS,
@@ -123,18 +123,20 @@ class Grid:
 
         # draw foreground: tile's value
         color               = self.settings.COLOR[tile_value]
-        text_surface        = self.font.render(str(tile_value), True, color)
+        text_surface        = self.__font.render(str(tile_value), True, color)
         w, h                = text_surface.get_width(), text_surface.get_height()
         cell_size           = self.settings.TILE_SIZE
         x                  += (cell_size - w) / 2
         y                  += (cell_size - h) / 2
-        self.bg.blit(text_surface, (x, y, w, h))
+        self.__bg.blit(text_surface, (x, y, w, h))
 
     def redraw(self):
         """
         Redraw entire board
         """
-        self.bg.fill(self.settings.BORDER_COLOR)
+        self.__bg.fill(self.settings.BACKGROUND_COLOR)
+        w, h = self.__bg.get_size()
+        pygame_draw.rect(self.__bg, self.settings.BORDER_COLOR, (0, 0, w, h), border_radius=self.settings.BORDER_RADIUS * 3)
 
         for r in range(self.ROW):
             for c in range(self.COLUMN):
@@ -144,10 +146,10 @@ class Grid:
         """
         Draw
         """
-        w, h                = self.bg.get_size()
+        w, h                = self.__bg.get_size()
         x, y                = self.position
 
-        screen.blit(self.bg, (x, y, w, h))
+        screen.blit(self.__bg, (x, y, w, h))
 
     def restart(self):
         self.board          = [[0 for c in range(self.COLUMN)] for r in range(self.ROW)]
@@ -159,6 +161,7 @@ class Grid:
     def copy(src: list, des: list):
         """
         This function is used to copy the board's values
+
         Parameters
         ----------
             src: list
@@ -305,46 +308,8 @@ class Grid:
         for i in range(4):
             for j in range(4):
                 if self.board[i][j] == 0:
-                    if random.random() > 0.9:
-                        empty_squares.append((i, j, 4))
-                    else:
-                        empty_squares.append((i, j, 2))
-        return empty_squares
-
-    def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
-        places = []
-        for i in range(4):
-            for j in range(4):
-                if self.board[i][j] == 0:
                     places.append((i, j))
         return places
-
-    def get_num_empty_tiles(self) -> int:
-        return len(self.get_available_moves_for_min())
-
-    def place_tile(self, row: int, column: int, tile: int) -> None:
-        """
-        Set value for tile at row 'row' and column 'column'
-        """
-        self.board[row][column] = tile
-
-    def get_children(self, who: str) -> list:
-        """
-        Get next grid states
-
-        Parameters
-        ----------
-            who: str
-                who can be "max", "min" or "expect"
-
-        Returns
-        -------
-            list of next available moves (or grid states)
-        """
-        if who == "max":
-            return self.get_available_moves_for_max()
-        elif who == "min" or who == "expect":
-            return self.get_available_moves_for_min()
 
     def move_up(self, calculate_score=False) -> None:
         """
@@ -356,7 +321,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
         # Loop over all columns
@@ -376,7 +342,7 @@ class Grid:
                 elif self.board[i][j] == k:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w += 1
                     k = 0
                 # if 2 tiles don't match, write the first tile at location w
@@ -403,7 +369,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -417,7 +384,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[w][j] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w -= 1
                     k = 0
                 else:
@@ -440,7 +407,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
 
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -454,7 +422,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w += 1
                     k = 0
                 else:
@@ -477,7 +445,8 @@ class Grid:
                 decide if this movement is scored or not
         """
         if calculate_score:
-            self.score.inc_num_move()
+            self.__score.inc_num_move()
+            self.__state.save_next(self.board, self.__score)
             
         ROW, COLUMN = self.ROW, self.COLUMN
 
@@ -491,7 +460,7 @@ class Grid:
                 elif k == self.board[i][j]:
                     self.board[i][w] = 2 * k
                     if calculate_score is True:
-                        self.score.add_to_score(2 * k)
+                        self.__score.current_score += 2 * k
                     w -= 1
                     k = 0
                 else:
@@ -523,38 +492,6 @@ class Grid:
             self.move_left(calculate_score)
         else:
             self.move_right(calculate_score)
-
-    def get_move_to(self, child: "Grid") -> int:
-        """
-        Parameters
-        ---------
-            child: Grid
-                the child state that the current state tend to be
-        
-        Returns
-        -------
-            direction: int
-                the right action to get the state of child
-        """
-        if self.can_move_up():
-            g = Grid(None)
-            g.board = deepcopy(self.board)
-            g.move_up()
-            if g == child:
-                return 0
-        if self.can_move_down():
-            g = Grid(None)
-            g.board = deepcopy(self.board)
-            g.move_down()
-            if g == child:
-                return 1
-        if self.can_move_left():
-            g = Grid(None)
-            g.board = deepcopy(self.board)
-            g.move_left()
-            if g == child:
-                return 2
-        return 3
 
     def is_terminal(self, who: str) -> bool:
         """
