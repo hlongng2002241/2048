@@ -64,6 +64,7 @@ class State:
 
         line                = self.f_load.readline()
         score.current_score = int(line.split(maxsplit=1)[0])
+        score.num_moves     = self.__idx
         
         for r in range(4):
             line            = eval(self.f_load.readline())

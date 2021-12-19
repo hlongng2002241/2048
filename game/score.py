@@ -105,6 +105,11 @@ class Score:
     def num_moves(self):
         return self.__num_moves
 
+    @num_moves.setter
+    def num_moves(self, value):
+        self.__num_moves = value
+        self.draw_box(self.__bg2, self.__num_moves, self.titles[2], 0, 0)
+
 
 
 

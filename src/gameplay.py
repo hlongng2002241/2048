@@ -79,13 +79,13 @@ class GamePlay:
             return
 
         if isinstance(algo, Minimax):
-            self.__state.open_file("./saved/minimax.out", "load")
+            self.__state.open_file(f"./saved/minimax_d{self.algorithm.max_depth}.out", "load")
         elif isinstance(algo, MinimaxAlphaBeta):
-            self.__state.open_file("./saved/minimax_ab.out", "load")
+            self.__state.open_file(f"./saved/minimax_ab_d{self.algorithm.max_depth}.out", "load")
         elif isinstance(algo, Expectimax):
-            self.__state.open_file("./saved/expectimax.out", "load")
+            self.__state.open_file(f"./saved/expectimax_d{self.algorithm.max_depth}.out", "load")
         elif isinstance(algo, MixedExpectimax):
-            self.__state.open_file("./saved/mixed.out", "load")
+            self.__state.open_file(f"./saved/mixed_d{self.algorithm.max_depth}.out", "load")
     
     def switch_replay_mode(self):
         if self.is_replayed is False:
