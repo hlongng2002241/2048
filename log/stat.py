@@ -1,8 +1,14 @@
 file_paths = [
-    "./raw/minimax_ab_max_d4_new_eval_.out",
-    "./raw/minimax_ab_max_d4_new_eval__.out",
-    "./raw/minimax_ab_sum_d4_new_eval_.out",
-    "./raw/minimax_ab_sum_d4_new_eval__.out",
+    # "./raw/minimax_ab_max_d4_new_eval_.out",
+    # "./raw/minimax_ab_max_d4_new_eval__.out",
+    # "./raw/minimax_ab_sum_d4_new_eval_.out",
+    # "./raw/minimax_ab_sum_d4_new_eval__.out",
+    # "./raw/mixed_d4.out",
+    # "./raw/mixed_d5.out"
+    "./raw/mixed_u4.out",
+    "./raw/mixed_u5.out",
+    "./raw/mixed_l4.out",
+    "./raw/mixed_l5.out",
 ]
 
 for file_path in file_paths:
