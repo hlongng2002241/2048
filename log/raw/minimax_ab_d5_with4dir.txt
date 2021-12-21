@@ -1,0 +1,500 @@
+1 / 100
+max_tile: 1024
+movements: 1035
+score: 16960
+
+2 / 100
+max_tile: 2048
+movements: 1607
+score: 29276
+
+3 / 100
+max_tile: 2048
+movements: 1559
+score: 28592
+
+4 / 100
+max_tile: 1024
+movements: 844
+score: 13620
+
+5 / 100
+max_tile: 2048
+movements: 1630
+score: 30448
+
+6 / 100
+max_tile: 512
+movements: 737
+score: 10928
+
+7 / 100
+max_tile: 2048
+movements: 1394
+score: 26072
+
+8 / 100
+max_tile: 2048
+movements: 1899
+score: 35756
+
+9 / 100
+max_tile: 2048
+movements: 1672
+score: 30820
+
+10 / 100
+max_tile: 1024
+movements: 923
+score: 14732
+
+11 / 100
+max_tile: 2048
+movements: 1527
+score: 28204
+
+12 / 100
+max_tile: 2048
+movements: 1489
+score: 27524
+
+13 / 100
+max_tile: 1024
+movements: 954
+score: 15436
+
+14 / 100
+max_tile: 1024
+movements: 793
+score: 12664
+
+15 / 100
+max_tile: 2048
+movements: 1748
+score: 32784
+
+16 / 100
+max_tile: 512
+movements: 621
+score: 8924
+
+17 / 100
+max_tile: 1024
+movements: 1020
+score: 16520
+
+18 / 100
+max_tile: 2048
+movements: 1760
+score: 32384
+
+19 / 100
+max_tile: 4096
+movements: 2510
+score: 52936
+
+20 / 100
+max_tile: 2048
+movements: 1451
+score: 27060
+
+21 / 100
+max_tile: 2048
+movements: 1908
+score: 35984
+
+22 / 100
+max_tile: 512
+movements: 768
+score: 11468
+
+23 / 100
+max_tile: 2048
+movements: 1872
+score: 35000
+
+24 / 100
+max_tile: 2048
+movements: 1968
+score: 36632
+
+25 / 100
+max_tile: 1024
+movements: 991
+score: 16268
+
+26 / 100
+max_tile: 2048
+movements: 1948
+score: 36248
+
+27 / 100
+max_tile: 512
+movements: 500
+score: 7004
+
+28 / 100
+max_tile: 2048
+movements: 2002
+score: 36828
+
+29 / 100
+max_tile: 1024
+movements: 1017
+score: 16636
+
+30 / 100
+max_tile: 4096
+movements: 2881
+score: 59620
+
+31 / 100
+max_tile: 1024
+movements: 1236
+score: 20368
+
+32 / 100
+max_tile: 1024
+movements: 1138
+score: 18284
+
+33 / 100
+max_tile: 2048
+movements: 1494
+score: 27552
+
+34 / 100
+max_tile: 1024
+movements: 1124
+score: 18148
+
+35 / 100
+max_tile: 2048
+movements: 1718
+score: 32380
+
+36 / 100
+max_tile: 1024
+movements: 956
+score: 15512
+
+37 / 100
+max_tile: 1024
+movements: 1069
+score: 17288
+
+38 / 100
+max_tile: 1024
+movements: 1128
+score: 18676
+
+39 / 100
+max_tile: 2048
+movements: 2019
+score: 37152
+
+40 / 100
+max_tile: 2048
+movements: 1900
+score: 35820
+
+41 / 100
+max_tile: 1024
+movements: 1033
+score: 16668
+
+42 / 100
+max_tile: 1024
+movements: 1015
+score: 16608
+
+43 / 100
+max_tile: 1024
+movements: 1133
+score: 18760
+
+44 / 100
+max_tile: 1024
+movements: 1129
+score: 18840
+
+45 / 100
+max_tile: 1024
+movements: 1362
+score: 22112
+
+46 / 100
+max_tile: 256
+movements: 386
+score: 4936
+
+47 / 100
+max_tile: 1024
+movements: 780
+score: 12596
+
+48 / 100
+max_tile: 1024
+movements: 977
+score: 15960
+
+49 / 100
+max_tile: 4096
+movements: 2482
+score: 51996
+
+50 / 100
+max_tile: 2048
+movements: 1958
+score: 36396
+
+51 / 100
+max_tile: 2048
+movements: 1348
+score: 24632
+
+52 / 100
+max_tile: 1024
+movements: 1001
+score: 16328
+
+53 / 100
+max_tile: 1024
+movements: 1058
+score: 17116
+
+54 / 100
+max_tile: 2048
+movements: 1562
+score: 28480
+
+55 / 100
+max_tile: 1024
+movements: 966
+score: 15152
+
+56 / 100
+max_tile: 512
+movements: 624
+score: 8896
+
+57 / 100
+max_tile: 2048
+movements: 1954
+score: 36532
+
+58 / 100
+max_tile: 1024
+movements: 664
+score: 10864
+
+59 / 100
+max_tile: 1024
+movements: 915
+score: 14432
+
+60 / 100
+max_tile: 2048
+movements: 1742
+score: 32772
+
+61 / 100
+max_tile: 2048
+movements: 1578
+score: 28560
+
+62 / 100
+max_tile: 2048
+movements: 1906
+score: 35860
+
+63 / 100
+max_tile: 1024
+movements: 1113
+score: 18108
+
+64 / 100
+max_tile: 2048
+movements: 1364
+score: 24872
+
+65 / 100
+max_tile: 512
+movements: 587
+score: 8444
+
+66 / 100
+max_tile: 1024
+movements: 1016
+score: 16484
+
+67 / 100
+max_tile: 2048
+movements: 1410
+score: 26688
+
+68 / 100
+max_tile: 1024
+movements: 918
+score: 14956
+
+69 / 100
+max_tile: 2048
+movements: 1940
+score: 36240
+
+70 / 100
+max_tile: 2048
+movements: 1772
+score: 32968
+
+71 / 100
+max_tile: 2048
+movements: 1931
+score: 36216
+
+72 / 100
+max_tile: 2048
+movements: 1475
+score: 27464
+
+73 / 100
+max_tile: 2048
+movements: 1179
+score: 22268
+
+74 / 100
+max_tile: 2048
+movements: 1991
+score: 36844
+
+75 / 100
+max_tile: 512
+movements: 660
+score: 9320
+
+76 / 100
+max_tile: 2048
+movements: 1431
+score: 26648
+
+77 / 100
+max_tile: 1024
+movements: 1021
+score: 16580
+
+78 / 100
+max_tile: 512
+movements: 539
+score: 7552
+
+79 / 100
+max_tile: 1024
+movements: 998
+score: 16364
+
+80 / 100
+max_tile: 2048
+movements: 1681
+score: 31764
+
+81 / 100
+max_tile: 2048
+movements: 1720
+score: 32564
+
+82 / 100
+max_tile: 512
+movements: 528
+score: 7336
+
+83 / 100
+max_tile: 2048
+movements: 1543
+score: 28228
+
+84 / 100
+max_tile: 1024
+movements: 735
+score: 11660
+
+85 / 100
+max_tile: 1024
+movements: 761
+score: 12340
+
+86 / 100
+max_tile: 1024
+movements: 1123
+score: 18672
+
+87 / 100
+max_tile: 2048
+movements: 1967
+score: 36608
+
+88 / 100
+max_tile: 1024
+movements: 1110
+score: 18584
+
+89 / 100
+max_tile: 1024
+movements: 777
+score: 12580
+
+90 / 100
+max_tile: 2048
+movements: 1715
+score: 31456
+
+91 / 100
+max_tile: 256
+movements: 324
+score: 3876
+
+92 / 100
+max_tile: 2048
+movements: 1801
+score: 34148
+
+93 / 100
+max_tile: 1024
+movements: 966
+score: 15992
+
+94 / 100
+max_tile: 512
+movements: 574
+score: 8012
+
+95 / 100
+max_tile: 2048
+movements: 1452
+score: 27196
+
+96 / 100
+max_tile: 1024
+movements: 758
+score: 12280
+
+97 / 100
+max_tile: 2048
+movements: 1706
+score: 32188
+
+98 / 100
+max_tile: 2048
+movements: 1490
+score: 27528
+
+99 / 100
+max_tile: 1024
+movements: 1041
+score: 16776
+
+100 / 100
+max_tile: 2048
+movements: 1831
+score: 34208
+
