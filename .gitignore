@@ -9,3 +9,5 @@ __pycache__/
 .vscode/
 
 tester.py
+
+stat.out
