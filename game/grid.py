@@ -303,13 +303,13 @@ class Grid:
         if direction == 3:
             return self.can_move_right()
 
-    def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
-        places = []
-        for i in range(4):
-            for j in range(4):
-                if self.board[i][j] == 0:
-                    places.append((i, j))
-        return places
+    # def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
+    #     places = []
+    #     for i in range(4):
+    #         for j in range(4):
+    #             if self.board[i][j] == 0:
+    #                 places.append((i, j))
+    #     return places
 
     def move_up(self, calculate_score=False) -> None:
         """

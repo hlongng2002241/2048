@@ -21,6 +21,17 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 
+class DevelopmentMode(metaclass=SingletonMeta):
+    def __init__(self) -> None:
+        pass
+
+    def on(self) -> bool:
+        return False
+
+    def off(self) -> bool:
+        return not self.on()
+
+
 class SharedFont(metaclass=SingletonMeta):
     FONT_PATH = "fonts/ClearSans-Bold.ttf"
 
@@ -30,7 +41,5 @@ class SharedFont(metaclass=SingletonMeta):
     def get_font(self, size) -> pygame_font.Font:
         if self.fonts.get(size) is None:
             self.fonts[size] = pygame_font.Font(self.FONT_PATH, size)
-        
-        return self.fonts[size]
 
-    
+        return self.fonts[size]

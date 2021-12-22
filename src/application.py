@@ -19,7 +19,7 @@ class Application:
 
         self.BACKGROUND_COLOR   = (250, 248, 240)
 
-    def show_fps(self, dt: float):
+    def __show_fps(self, dt: float):
         """
         Show the FPS in window caption
         
@@ -32,7 +32,7 @@ class Application:
         fps = 1.0 / dt
         pygame_display.set_caption("fps = " + str(fps))
 
-    def process_input(self):
+    def __process_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -43,13 +43,13 @@ class Application:
             self.gameplay.process_input(event)
             self.menu.process_input(event)
         
-    def update(self, dt):
+    def __update(self, dt):
         self.gameplay.update(dt)
 
         if self.gameplay.is_statistics and self.gameplay.n_statistics <= self.gameplay.idx_statistics:
             self.running = False
     
-    def draw(self):
+    def __draw(self):
         # self.screen.fill((0, 0, 0))
         self.screen.fill(self.BACKGROUND_COLOR)
         
@@ -70,10 +70,10 @@ class Application:
             dt              = (end_time - start_time) / 1000
             start_time      = end_time
 
-            self.show_fps(dt)
-            self.process_input()
-            self.update(dt)
-            self.draw()   
+            self.__show_fps(dt)
+            self.__process_input()
+            self.__update(dt)
+            self.__draw()   
             
         pygame.quit()
 

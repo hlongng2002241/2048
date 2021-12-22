@@ -1,6 +1,6 @@
 import pygame
 from pygame.event import Event
-from . utility import SharedFont
+from . utility import SharedFont, DevelopmentMode
 from game.grid import Grid
 from game.score import Score
 from game.state import State
@@ -30,7 +30,7 @@ class GamePlay:
         self.__score.position   = (215, 50)
 
         self.__state            = State("log.txt", "save")
-        self.is_replayed        = False
+        self.__is_replayed      = False
         
         self.__grid             = Grid(self.__score, self.__state)
         self.__grid.position    = (30, 200)
@@ -57,10 +57,13 @@ class GamePlay:
     def new_game(self):
         self.__grid.restart()
         self.__score.reset()
-        if self.is_replayed is False:
-            self.__state.open_file("log.txt", "save")
-        else:
-            self.load_replay_file(self.algorithm)
+
+        if DevelopmentMode():
+            if self.__is_replayed is False:
+                self.__state.open_file("log.txt", "save")
+            else:
+                self.__load_replay_file(self.algorithm)
+
         self.current_time       = 0
 
     def set_play_mode(self, mode):
@@ -71,10 +74,11 @@ class GamePlay:
         self.algorithm          = algo
         self.current_time       = 0
 
-        if self.is_replayed:
-            self.load_replay_file(algo)
+        if DevelopmentMode().on():
+            if self.__is_replayed:
+                self.__load_replay_file(algo)
 
-    def load_replay_file(self, algo):
+    def __load_replay_file(self, algo):
         if self.__state.mode == "load":
             return
 
@@ -88,12 +92,12 @@ class GamePlay:
             self.__state.open_file(f"./saved/mixed_d{self.algorithm.max_depth}.out", "load")
     
     def switch_replay_mode(self):
-        if self.is_replayed is False:
-            self.is_replayed = True
-            self.load_replay_file(self.algorithm)
+        if self.__is_replayed is False:
+            self.__is_replayed = True
+            self.__load_replay_file(self.algorithm)
             print("replay mode: ON")
         else:
-            self.is_replayed = False
+            self.__is_replayed = False
             self.__state.open_file("log.txt", "save")
             print("replay mode: OFF")
 
@@ -135,9 +139,9 @@ class GamePlay:
                 TIME_PER_MOVE           = 1.0 / self.MOVES_PER_SECOND
                 
                 if self.current_time >= TIME_PER_MOVE:
-                    self.current_time -= TIME_PER_MOVE
+                    self.current_time  -= TIME_PER_MOVE
 
-                    if self.is_replayed is False:
+                    if self.__is_replayed is False:
                         self.algorithm.best_move(self.__grid)
                         self.__grid.random_new_tile()
                         self.__grid.redraw()

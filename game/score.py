@@ -25,7 +25,7 @@ class Score:
     def __init__(self) -> None:
         self.__current_score    = 0
         self.__best_score       = 0
-        self.titles             = ['SCORE', 'BEST', 'MOVES']
+        self.__titles           = ['SCORE', 'BEST', 'MOVES']
 
         self.__font_title       = SharedFont().get_font(self.TITLE_SIZE)
         self.__font_title.bold  = True
@@ -42,28 +42,28 @@ class Score:
 
     def reset(self):
         self.__current_score    = 0
-        self.draw_box_idx(0)
+        self.__draw_box_idx(0)
         self.__num_moves        = 0
-        self.draw_box(self.__bg2, self.__num_moves, self.titles[2], 0, 0)
+        self.__draw_box(self.__bg2, self.__num_moves, self.__titles[2], 0, 0)
 
     def inc_num_move(self, value: int = 1):
         self.__num_moves       += value
-        self.draw_box(self.__bg2, self.__num_moves, self.titles[2], 0, 0)
+        self.__draw_box(self.__bg2, self.__num_moves, self.__titles[2], 0, 0)
         
     def redraw(self):
         self.__bg.fill(self.BACKGROUND_COLOR)
         self.__bg2.fill(self.BACKGROUND_COLOR)
-        self.draw_box_idx(0)
-        self.draw_box_idx(1)
-        self.draw_box(self.__bg2, self.__num_moves, self.titles[2], 0, 0)
+        self.__draw_box_idx(0)
+        self.__draw_box_idx(1)
+        self.__draw_box(self.__bg2, self.__num_moves, self.__titles[2], 0, 0)
 
-    def draw_box_idx(self, idx: int):
+    def __draw_box_idx(self, idx: int):
         if idx == 0:
-            self.draw_box(self.__bg, self.__current_score, self.titles[0], 0, 0)
+            self.__draw_box(self.__bg, self.__current_score, self.__titles[0], 0, 0)
         elif idx == 1:
-            self.draw_box(self.__bg, self.__best_score, self.titles[1], self.TILE_WIDTH + self.BOX_SPACE, 0)
+            self.__draw_box(self.__bg, self.__best_score, self.__titles[1], self.TILE_WIDTH + self.BOX_SPACE, 0)
 
-    def draw_box(self, bg, score: int, title: str, x: int, y: int):
+    def __draw_box(self, bg, score: int, title: str, x: int, y: int):
         pygame_draw.rect(bg, self.BOX_COLOR, (x, y, self.TILE_WIDTH, self.TILE_HEIGHT), border_radius=self.BORDER_RADIUS)
 
         y                      += self.TOP_MARGIN
@@ -96,10 +96,10 @@ class Score:
     @current_score.setter
     def current_score(self, score):
         self.__current_score    = score
-        self.draw_box_idx(0)
+        self.__draw_box_idx(0)
         if self.__best_score < self.__current_score:
             self.__best_score   = self.__current_score
-            self.draw_box_idx(1)
+            self.__draw_box_idx(1)
 
     @property
     def num_moves(self):
@@ -108,7 +108,7 @@ class Score:
     @num_moves.setter
     def num_moves(self, value):
         self.__num_moves = value
-        self.draw_box(self.__bg2, self.__num_moves, self.titles[2], 0, 0)
+        self.__draw_box(self.__bg2, self.__num_moves, self.__titles[2], 0, 0)
 
 
 
