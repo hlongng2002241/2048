@@ -47,7 +47,7 @@ class GamePlay:
 
         # =================================================
         # Statistics here
-        self.is_statistics      = False
+        self.is_statistics      = True
         self.n_statistics       = 100
         self.idx_statistics     = 0
         self.__file_statistics  = open("stat.out", "w")

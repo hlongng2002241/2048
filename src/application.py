@@ -17,7 +17,7 @@ class Application:
         self.menu               = Menu(self.gameplay)
         self.menu.position      = (430, 50)
 
-        self.BACKGROUND_COLOR   = (250, 248, 240)
+        self.BACKGROUND_COLOR   = (232, 240, 242)
 
     def show_fps(self, dt: float):
         """
