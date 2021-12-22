@@ -93,11 +93,11 @@ class GamePlay:
     
     def switch_replay_mode(self):
         if self.__is_replayed is False:
-            self.__is_replayed = True
+            self.__is_replayed  = True
             self.__load_replay_file(self.algorithm)
             print("replay mode: ON")
         else:
-            self.__is_replayed = False
+            self.__is_replayed  = False
             self.__state.open_file("log.txt", "save")
             print("replay mode: OFF")
 
@@ -153,18 +153,18 @@ class GamePlay:
             self.__do_statistics()
     
     def __store_special_log(self):
-        src = "log.txt"
-        des = "./saved/log.out"
+        src                     = "log.txt"
+        des                     = "./saved/log.out"
         shutil.copyfile(src, des)
 
         if isinstance(self.algorithm, Minimax):
-            new_name = f"./saved/minimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
+            new_name            = f"./saved/minimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
         elif isinstance(self.algorithm, MinimaxAlphaBeta):
-            new_name = f"./saved/minimax_ab_d{self.algorithm.max_depth}_{int(time.time())}.out"
+            new_name            = f"./saved/minimax_ab_d{self.algorithm.max_depth}_{int(time.time())}.out"
         elif isinstance(self.algorithm, Expectimax):
-            new_name = f"./saved/expectimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
+            new_name            = f"./saved/expectimax_d{self.algorithm.max_depth}_{int(time.time())}.out"
         elif isinstance(self.algorithm, MixedExpectimax):
-            new_name = f"./saved/mixed_d{self.algorithm.max_depth}_{int(time.time())}.out"
+            new_name            = f"./saved/mixed_d{self.algorithm.max_depth}_{int(time.time())}.out"
 
         os.rename(des, new_name)
         
@@ -175,7 +175,7 @@ class GamePlay:
         max_tile = 0
         for row in self.__grid.board:
             for x in row:
-                max_tile = max(max_tile, x)
+                max_tile        = max(max_tile, x)
         
         if max_tile >= 8192:
             self.__store_special_log()
@@ -196,10 +196,10 @@ class GamePlay:
         max_tile = 0
         for row in self.__grid.board:
             for x in row:
-                max_tile = max(max_tile, x)
+                max_tile        = max(max_tile, x)
 
-        n_movements = self.__score.num_moves
-        score = self.__score.current_score
+        n_movements             = self.__score.num_moves
+        score                   = self.__score.current_score
 
         print(self.idx_statistics, "/", self.n_statistics)
         print("max_tile:", max_tile)
