@@ -3,7 +3,6 @@
 ![image](docs/preview.png)
 ## Introduction
 + A capstone project for Introduction to Artificial Intelligence course.
-+ A quick introduction of the problem: check file `introduction.pdf` in `docs` folder for more information.
 + This is a small application of `minimax` and `expectimax` algorithm
 
 ## Collaborators
