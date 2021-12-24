@@ -15,4 +15,4 @@ We are K65 of major Data Science and Artificial Intelligence of Hanoi University
 + Dương Vũ Tuấn Minh
 
 ## Requirement:
-+ check [Requirement](Requirement.md) file
++ check [Requirement](Requirement.md)
