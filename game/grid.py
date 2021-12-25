@@ -73,6 +73,13 @@ class Grid:
         self.random_new_tile()
         self.random_new_tile()
         self.redraw()
+        
+    def __str__(self):
+        string = ""
+        for row in self.board:
+            string += str(row)
+            string += "\n"
+        return string
 
     def random_new_tile(self):
         """
