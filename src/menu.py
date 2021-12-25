@@ -8,7 +8,7 @@ from . gameplay import GamePlay
 from algorithm.expectimax import Expectimax
 from algorithm.minimax import Minimax
 from algorithm.minimax_alpha_beta import MinimaxAlphaBeta
-from algorithm.mixed_expectmax import MixedExpectimax
+from algorithm.mixed_expectimax import MixedExpectimax
 from . utility import DevelopmentMode
 
 
