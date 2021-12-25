@@ -91,9 +91,9 @@ class Grid:
         # random tile's value
         tile_value = random.randint(1, self.RAMDOM_RANGE)
         if tile_value > self.RAMDOM_RANGE * (1 - self.RANDOM_4_RATE):
-            tile_value = 4
+            tile_value      = 4
         else:
-            tile_value = 2
+            tile_value      = 2
 
         # random tile's position
         while True:
@@ -176,13 +176,6 @@ class Grid:
             des.append([])
             for c in range(COLUMN):
                 des[r].append(src[r][c])
-
-    def __eq__(self, other) -> bool:
-        for i in range(self.ROW):
-            for j in range(self.COLUMN):
-                if self.board[i][j] != other.board[i][j]:
-                    return False
-        return True
 
     def can_move_up(self) -> bool:
         """
@@ -302,14 +295,6 @@ class Grid:
             return self.can_move_left()
         if direction == 3:
             return self.can_move_right()
-
-    # def get_non_placed_children_for_min(self) -> list[tuple[int, int]]:
-    #     places = []
-    #     for i in range(4):
-    #         for j in range(4):
-    #             if self.board[i][j] == 0:
-    #                 places.append((i, j))
-    #     return places
 
     def move_up(self, calculate_score=False) -> None:
         """
