@@ -13,7 +13,7 @@ class MinimaxAlphaBeta(Algorithm):
         if depth == self.max_depth or grid.is_terminal('max'):
             return -1, current_score
 
-        moves                           = [1, 2, 3]
+        moves                           = [0, 1, 2, 3]
         best_move, max_score            = -1, -self.eval.INFINITY
 
         for move in moves:
@@ -70,5 +70,7 @@ class MinimaxAlphaBeta(Algorithm):
 
         if move_dir != -1:
             grid.move(move_dir, True)
-        else:
-            grid.move_up(True)
+        #else:
+            #grid.move_up(True)
+
+        return move_dir
