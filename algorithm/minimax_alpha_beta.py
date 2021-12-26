@@ -65,7 +65,7 @@ class MinimaxAlphaBeta(Algorithm):
         return -1, min_score
 
 
-    def best_move(self, grid: Grid):
+    def best_move(self, grid: Grid) -> int:
         move_dir, _                     = self.max_move(grid, -self.eval.INFINITY, self.eval.INFINITY, 0)
 
         if move_dir != -1:

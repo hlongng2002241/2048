@@ -52,7 +52,7 @@ class GamePlay:
         self.idx_statistics     = 0
         self.__file_statistics  = open("stat.out", "w")
         # =================================================
-        #first try with d = 5, 20 times
+        # first try with d = 5, 20 times
 
     def new_game(self):
         self.__grid.restart()

@@ -2,10 +2,10 @@ from game.grid import Grid
 
 
 class Evaluation:   
-    GAME_OVER           = -9999999999
-    INFINITY            = 999999999999 
+    GAME_OVER               = -9999999999
+    INFINITY                = 999999999999 
 
-    WEIGHTS_MATRIX       = [
+    WEIGHTS_MATRIX          = [
         [
             [10, 7, 4, 1],
             [100, 70, 40, 10],
@@ -55,34 +55,34 @@ class Evaluation:
         if grid.is_terminal("max"):
             return self.GAME_OVER
         
-        total = 0
-        total += 2 * self.__evaluate_tiles_order(grid, is_movement)
-        total += 1 * self.__evaluate_average(grid.board)
-        total += 40 * self.__evaluate_potential_merge(grid.board)
-        total += 30 * self.__evaluate_empty_tile(grid.board)
+        total               = 0
+        total              += 2 * self.__evaluate_tiles_order(grid, is_movement)
+        total              += 1 * self.__evaluate_average(grid.board)
+        total              += 40 * self.__evaluate_potential_merge(grid.board)
+        total              += 30 * self.__evaluate_empty_tile(grid.board)
         return total
         
     def __evaluate_average(self, board: list) -> int:
-        s, cnt          = 0, 0
+        s, cnt              = 0, 0
         for row in board:
             for x in row:
-                s      += x
-                cnt    += 1 if x > 0 else 0
+                s          += x
+                cnt        += 1 if x > 0 else 0
         
         return s // cnt
     
     def __evaluate_empty_tile(self, board: list) -> int:
-        cnt             = 0
+        cnt                 = 0
         for row in board:
             for x in row:
-                cnt    += 1 if x == 0 else 0
+                cnt        += 1 if x == 0 else 0
         
         return cnt
 
     def __evaluate_potential_merge(self, board: list) -> int:
-        used_in_R       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
-        used_in_C       = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
-        cnt             = 0
+        used_in_R           = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
+        used_in_C           = [[False for c in range(self.COLUMN)] for r in range(self.ROW)]
+        cnt                 = 0
 
         for r in range(self.ROW):
             for c in range(self.COLUMN):
@@ -125,7 +125,7 @@ class Evaluation:
             else:
                 index_c = range(self.COLUMN)
 
-            strike = 0
+            strike      = 0
 
             for i in range(self.COLUMN - 1):
                 if board[r][index_c[i]] == board[r][index_c[i + 1]]:
