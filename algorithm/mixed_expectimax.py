@@ -19,7 +19,7 @@ class MixedExpectimax(Algorithm):
         return self.eval.INFINITY * self.cumulate_sum[self.max_depth]
 
     def max_move(self, grid: Grid, a: int, b: int, d: int) -> Tuple[int, int]:
-        current_score = self.eval.evaluate(grid, True)
+        current_score                   = self.eval.evaluate(grid, True)
 
         if d >= self.max_depth or grid.is_terminal(who="max"):
             return (-1, current_score * self.switch_sum[d])
@@ -36,14 +36,14 @@ class MixedExpectimax(Algorithm):
                 _, score                = self.min_move(grid, a, b, d + 1)
                 grid.copy(save_board, grid.board)
 
-                score += current_score * self.switch_sum[d]
+                score                  += current_score * self.switch_sum[d]
 
                 if best_score < score:
                     best_score          = score
                     best_move           = direct
 
                 if a < best_score:
-                    a = best_score
+                    a                   = best_score
                 if b <= a:
                     return (best_move, best_score)
 
@@ -80,7 +80,7 @@ class MixedExpectimax(Algorithm):
                         best_score      = score
 
                     if b > best_score:
-                        b = best_score
+                        b               = best_score
                     if b <= a:
                         return (-1, best_score)
 

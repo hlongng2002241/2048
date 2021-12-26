@@ -35,7 +35,7 @@ class MinimaxAlphaBeta(Algorithm):
 
     def min_move(self, grid: Grid, alpha: int, beta: int, depth: int):
 
-        current_score = self.eval.evaluate(grid, False)
+        current_score                   = self.eval.evaluate(grid, False)
 
         if depth == self.max_depth or grid.is_terminal('min'):
             return -1, current_score

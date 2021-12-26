@@ -21,7 +21,7 @@ class Expectimax(Algorithm):
         -------
             tuple of best_move and best_score
         """
-        current_score = self.eval.evaluate(grid, True)
+        current_score               = self.eval.evaluate(grid, True)
 
         if depth > self.max_depth or grid.is_terminal('max'):
             return -1, current_score
